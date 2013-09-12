@@ -1,0 +1,2 @@
+jira-asset-management-plugin
+============================
