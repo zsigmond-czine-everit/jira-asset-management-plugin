@@ -1,0 +1,127 @@
+					<div class="select-div">
+						<select name="selectAssignee" id="selectAssignee">
+						    
+						    #foreach ($assignee in $assignees)
+						    	#if($selectedUserName.equals($assignee.name))
+						    		<option selected="selected" value="$assignee.name" >$assignee.displayName</option>
+							    #else
+							    	<option value="$assignee.name">$assignee.displayName</option>
+							    #end
+					    	#end
+						</select>
+					</div>
+					<div class="choose">
+						 <input id="submit"  type="submit" name="submit_select" value="$i18n.getText('my.assets.button.choose')" class="btn">
+					</div>
+					<div style="clear:both">
+					</div>
+					<div class="gadget-container">
+						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("my.assets.title.assets")</h3>
+						<div class="dashboard-item-content">
+							<table cellspacing="0" cellpadding="2" class="basic-content-table">
+								<thead>
+									<tr>
+										<th width="100px">$i18n.getText("table.issue.id")</th>
+										<th>$i18n.getText("table.device.name")</th>
+										<th width="125px">$i18n.getText("table.assignee")</th>
+										<th width="125px">$i18n.getText("table.status")</th>
+										<th width="175px">$i18n.getText("table.action")</th>
+									</tr>
+								</thead>
+								<tbody>
+								#foreach ($asset in $myAssets)
+									<tr>
+										<td><a href="/browse/$asset.issueKey" class="issue-link">$asset.issueKey</a></td>
+										<td>$asset.deviceName</td>
+										<td><a href="/secure/ViewProfile.jspa?name=$asset.assignee.name" class="issue-link">$asset.assignee.displayName</a></td>
+										<td>$asset.status</td>
+										<td>
+											<a href="/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?actionName=$actionViewDetails&issueKey=$asset.issueKey&backPageUrl=$backButtonValue" class="ui-icon icon-information" title="$i18n.getText("icon.info")"></a>
+											#if($asset.loggedUserIsAssignee)
+												<a href="/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?actionName=$actionEdtiDetails&issueKey=$asset.issueKey&backPageUrl=$backButtonValue" class="ui-icon icon-edit" title="$i18n.getText("icon.edit")"></a>
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionInternalHandover&backPageUrl=$backButtonValue" class="ui-icon icon-internal-assignee" title="$i18n.getText("icon.internal.assignee")"></a>
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionExternalHandover&backPageUrl=$backButtonValue" class="ui-icon icon-external-assignee" title="$i18n.getText("icon.external.assignee")"></a>
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionDisposeAsset&backPageUrl=$backButtonValue" class="ui-icon icon-culling" title="$i18n.getText("icon.culling")"></a>
+											#end
+										</td>
+									</tr>
+								#end
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<br/>
+					<div class="gadget-container">
+						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("my.assets.title.received.assets")</h3>
+						<div class="dashboard-item-content">
+							<table cellspacing="0" cellpadding="2" class="basic-content-table">
+								<thead>
+									<tr>
+										<th width="100px">$i18n.getText("table.issue.id")</th>
+										<th>$i18n.getText("table.device.name")</th>
+										<th width="125px">$i18n.getText("table.assignee")</th>
+										<th width="125px">$i18n.getText("table.status")</th>
+										<th width="175px">$i18n.getText("table.action")</th>
+									</tr>
+								</thead>
+								<tbody>
+								#foreach ($asset in $receivedAssets)
+									<tr>
+										<td><a href="/browse/$asset.issueKey" class="issue-link">$asset.issueKey</a></td>
+										<td>$asset.deviceName</td>
+										<td><a href="/secure/ViewProfile.jspa?name=$asset.assignee.name" class="issue-link">$asset.assignee.displayName</a></td>
+										<td>$asset.status</td>
+										<td>
+											<a href="/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?actionName=$actionViewDetails&issueKey=$asset.issueKey&backPageUrl=$backButtonValue" class="ui-icon icon-information" title="$i18n.getText("icon.info")"></a>
+											#if($asset.loggedUserIsAssignee)
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionAcceptance&backPageUrl=$backButtonValue" class="ui-icon icon-accept" title="$i18n.getText("icon.accept")"></a>
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionRejection&backPageUrl=$backButtonValue" class="ui-icon icon-reject" title="$i18n.getText("icon.reject")"></a>
+											#elseif($asset.status.equals($statusInternalAssignee) && $asset.loggedUserIsReporter)
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionWithdrawal&backPageUrl=$backButtonValue" class="ui-icon icon-reject" title="$i18n.getText("icon.withdraw")"></a>
+											#end
+										 </td>
+									</tr>
+								#end
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<br/>
+					<div class="gadget-container">
+						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("my.assets.title.delivered.assets")</h3>
+						<div class="dashboard-item-content">
+							<table cellspacing="0" cellpadding="2" class="basic-content-table">
+								<thead>
+									<tr>
+										<th width="100px">$i18n.getText("table.issue.id")</th>
+										<th>$i18n.getText("table.device.name")</th>
+										<th width="125px">$i18n.getText("table.assignee")</th>
+										<th width="125px">$i18n.getText("table.status")</th>
+										<th width="175px">$i18n.getText("table.action")</th>
+									</tr>
+								</thead>
+								<tbody>
+								#foreach ($asset in $deliveredAssets)
+									<tr>
+										<td><a href="/browse/$asset.issueKey" class="issue-link">$asset.issueKey</a></td>
+										<td>$asset.deviceName</td>
+										<td><a href="/secure/ViewProfile.jspa?name=$asset.assignee.name" class="issue-link">$asset.assignee.displayName</a></td>
+										<td>$asset.status</td>
+										<td>
+											<a href="/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?actionName=$actionViewDetails&issueKey=$asset.issueKey&backPageUrl=$backButtonValue" class="ui-icon icon-information" title="$i18n.getText("icon.info")"></a>
+											#if($asset.status.equals($statusExternalAssignee) && $asset.loggedUserIsAssignee) 
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionReagain&backPageUrl=$backButtonValue" class="ui-icon icon-recover" title="$i18n.getText("icon.recover")"></a>
+											#elseif($asset.status.equals($statusInternalAssignee) && $asset.loggedUserIsPreviousAssigned)
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionWithdrawal&backPageUrl=$backButtonValue" class="ui-icon icon-reject" title="$i18n.getText("icon.withdraw")"></a>
+											#elseif($asset.loggedUserIsAssignee)
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionAcceptance&backPageUrl=$backButtonValue" class="ui-icon icon-accept" title="$i18n.getText("icon.accept")"></a>
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionRejection&backPageUrl=$backButtonValue" class="ui-icon icon-reject" title="$i18n.getText("icon.reject")"></a>
+											#end
+										</td>
+									</tr>
+								#end
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<br/>

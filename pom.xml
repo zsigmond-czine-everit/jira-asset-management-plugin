@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>biz.everit.jira</groupId>
+	<artifactId>jira-assets-registry</artifactId>
+	<version>0.1-SNAPSHOOT</version>
+
+	<organization>
+		<name>Example Company</name>
+		<url>http://www.example.com/</url>
+	</organization>
+
+	<name>jira-assets-registry</name>
+	<description>This is the biz.everit.jira:jira-assets-registry plugin for Atlassian JIRA.</description>
+	<packaging>jar</packaging>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>2.5.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.atlassian.jira</groupId>
+			<artifactId>atlassian-jira</artifactId>
+			<version>${jira.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.atlassian.activeobjects</groupId>
+			<artifactId>activeobjects-plugin</artifactId>
+			<version>0.23.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.atlassian.activeobjects</groupId>
+			<artifactId>activeobjects-spi</artifactId>
+			<version>0.23.0</version>
+		</dependency>
+		
+		<dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+	</dependencies>
+
+	<properties>
+		<jira.version>4.4.1</jira.version>
+		<jira.data.version>4.4</jira.data.version>
+		<amps.version>4.1.7</amps.version>
+		<plugin.testrunner.version>1.1.1</plugin.testrunner.version>
+	</properties>
+
+</project>

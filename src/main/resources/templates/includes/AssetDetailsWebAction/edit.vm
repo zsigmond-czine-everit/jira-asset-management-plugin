@@ -1,0 +1,172 @@
+					<div class="gadget-container">
+						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("new.asset.title.asset")</h3>
+						<div style="padding: 10px 10px 10px 10px;">
+							<div class="gadget-container">
+								<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("new.asset.title.required.fields")</h3>
+								<div class="dashboard-item-content">
+									<table id="required-field" cellspacing="0" cellpadding="2" class="basic-content-table">
+										<thead>
+											<tr>
+												<th width="40%">$i18n.getText("table.field.name")</th>
+												<th width="60%" >$i18n.getText("table.field.value")</th>
+											</tr>
+										</thead>
+										<tbody>
+										#foreach ($field in $requiredFields)
+											<tr>
+											#if($asset.assetDetails.fields.get($field.fieldName))
+												#if($field.fieldName.equals($FIELD_NAME_ASSIGNEE))
+													<td>$field.fieldName</td>
+													<td>$asset.assignee.displayName
+														<input name="$field.fieldName" type="hidden" value="$asset.assignee.name"/>
+													</td>
+												#else
+													<td>$field.fieldName</td>
+													<td>
+														<input name="$field.fieldName" type="text" value="$asset.assetDetails.fields.get($field.fieldName)"/>
+													</td>
+												#end
+											#elseif($field.active)
+												<td>$field.fieldName</td>
+												<td>
+													<input name="$field.fieldName" type="text"/>
+												</td>
+											#end
+											</tr>
+										#end
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<br/>
+							<div class="gadget-container">
+								<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("new.asset.title.optinial.fields")</h3>
+								<div class="dashboard-item-content">
+									<table id="optional-field" cellspacing="0" cellpadding="2" class="basic-content-table">
+										<thead>
+											<tr>
+												<th width="40%">$i18n.getText("table.field.name")</th>
+												<th width="60%">$i18n.getText("table.field.value")</th>
+											</tr>
+										</thead>
+										<tbody>
+											#foreach ($field in $optionalFields)
+												<tr>
+												#if($asset.assetDetails.fields.get($field.fieldName))
+													<td>$field.fieldName</td>
+													<td>
+														<input name="$field.fieldName" type="text" value="$asset.assetDetails.fields.get($field.fieldName)"/>
+													</td>
+												#end
+												</tr>
+											#end
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<br/>
+							<div style="padding: 0px 0px 20px 0px">
+								<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" type="text/javascript"></script>
+								<script type='text/javascript'>
+									function DropDown(el) {
+										this.dd = el;
+										this.initEvents();
+									}
+									DropDown.prototype = {
+										initEvents : function() {
+											var obj = this;
+						
+											obj.dd.on('click', function(event){
+												$(this).toggleClass('active');
+												event.stopPropagation();
+											});	
+										}
+									}
+									$(function() {
+						
+										var dd = new DropDown( $('#dd') );
+						
+										$(document).click(function() {
+											// all dropdowns
+											$('.dropdown-menu').removeClass('active');
+										});
+						
+									});
+									
+									function addRow(fieldKey, fieldName) {
+										var table = document.getElementById('optional-field');
+										var tbody = table.getElementsByTagName("tbody")[0];
+										var rowCount = table.rows.length - 1;
+										console.log(rowCount);
+		            					var row = tbody.insertRow(rowCount);
+		            					row.id = fieldKey + '_tr';
+		            					
+		            					var cell1 = row.insertCell(0);
+		            					var element1 = document.createElement("label");
+		            					var id = fieldName + "_VALUE";
+		            					element1.setAttribute("for", id);
+		            					element1.innerHTML= fieldName;
+		            					cell1.appendChild(element1);
+		            					
+		            					var cell2 = row.insertCell(1);
+		            					var element2 = document.createElement("input");
+		            					element2.type = "text";
+		            					element2.name = fieldName;
+		            					element2.setAttribute("id", id);
+		            					var element3 = document.createElement("a");
+			            				var onclickAttribute = 'deleteRow("' + fieldKey + '", "' + fieldName + '")';
+			            				element3.setAttribute("onclick", onclickAttribute);
+			            				var classVar = 'ui-icon icon-trash pull-rigth';
+			            				element3.setAttribute("class", classVar);
+			            				var titleVar = '$i18n.getText("icon.remove")';
+			            				element3.setAttribute("title", titleVar);
+		            					cell2.appendChild(element2);
+		            					cell2.appendChild(element3);
+		            					var deleteLiId = '#' + fieldKey;
+		            					$(deleteLiId).remove();
+			            				
+		            					tbody.appendChild(row);
+		            					console.log("ADDROW fieldkey: "+fieldKey+". fieldName: "+fieldName);
+									}
+									
+									function deleteRow(fieldKey, fieldName) {
+										if(fieldName != "Custom") {
+											var deleteRowId = '#' + fieldKey + '_tr';
+											$(deleteRowId).remove();
+											var ul = document.getElementById('dropdown-list');
+											var newLI = document.createElement("li");
+											newLI.setAttribute("id", fieldKey);
+											var onclickAttr = 'addRow("' + fieldKey + '","' + fieldName +'\")';
+											var a = document.createElement("a");
+											a.setAttribute("onclick", onclickAttr);
+											a.innerHTML = fieldName; 
+											newLI.appendChild(a);
+											ul.appendChild(newLI);
+										}
+									}
+								</script>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<a href="$backButtonValue" class="btn pull-left">$i18n.getText('new.asset.button.back')</a>
+					
+					<div style="float: left">
+						<div id="dd" class="dropdown-menu" tabindex="1" style="padding-bottom: 20px">
+						    <span class="btn">$i18n.getText('new.asset.button.add.more.fields')</span>
+						    <ul id="dropdown-list" class="dropdown">
+						    	#foreach ($field in $optionalFields)
+							    	#if(!$asset.assetDetails.fields.get($field.fieldName))
+							    		#if($field.active)
+							    			<li id="key_$field.id"><a onclick="addRow('key_$field.id', '$field.fieldName')">$field.fieldName</a></li>
+							    		#end
+							    	#end
+						    	#end
+						    </ul>
+						</div>
+					</div>
+					<input name="issueKey" type="hidden" value="$asset.issueKey"/>
+					<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa" class="btn pull-rigth">$i18n.getText('new.asset.button.cancel')</a>
+					<input id="submit"  type="submit" name="submit_edit" value="$i18n.getText('new.asset.button.save')" class="btn pull-rigth">
+					<div style="clear: both">
+					</div>

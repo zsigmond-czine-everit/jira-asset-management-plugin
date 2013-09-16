@@ -1,0 +1,380 @@
+.grid {
+	width: 800px;
+}
+
+form {
+	padding: 10px 10px 10px 10px;
+}
+
+.gadget-container {
+	border: 1px solid rgb(187, 187, 187);
+	position: relative;
+	border-radius: 1em 1em 1em 1em;
+}
+
+.select-div {
+	padding: 10px 10px 10px 10px;
+	float: left;
+}
+
+.choose{
+	float: right;
+}
+
+.dashboard-item-title {
+	background: none repeat scroll 0% 0% rgb(51, 102, 153);
+	color: rgb(255, 255, 255);
+	font-size: 12px;
+	font-weight: bold;
+	margin: 0px;
+	padding: 4px 4.5em 2px 0.6em;
+	min-height: 18px;
+	text-align: left;
+	border-radius: 1em 1em 0em 0em;
+}
+
+.dashboard-item-content {
+	padding: 10px 10px 10px 10px;
+}
+
+.basic-search-table {
+	width: 500px;
+}
+
+.basic-search-table tbody tr td {
+	text-align: left;
+}
+
+.basic-search-table tbody input {
+	width: 200px;
+	padding: 8px;
+}
+
+.basic-content-table tbody input {
+	width: 225px;
+	padding: 8px;
+}
+
+.button {
+	padding: 2px;
+	border-radius: 1em 1em 1em 1em;
+}
+
+.basic-content-table {
+	width: 100%;
+	border: 1px solid rgb(187, 187, 187);
+}
+
+.basic-content-table tbody tr:nth-child(even) {
+	background: #FFFFFF
+}
+
+.basic-content-table tbody tr:nth-child(odd) {
+	background: #CCCCCC
+}
+
+.basic-content-table thead tr {
+	background-color: #3C78B5;
+}
+
+.basic-content-table thead tr th {
+	text-align: center;
+	color: #FFFFFF;
+	border-left: 1px solid rgb(187, 187, 187);
+	border-right: 1px solid rgb(187, 187, 187);
+}
+
+.basic-content-table tbody tr {
+	background-color: #EEEEEE;
+}
+
+.basic-content-table tbody tr td {
+	border-left: 1px solid rgb(187, 187, 187);
+	border-right: 1px solid rgb(187, 187, 187);
+	text-align: left;
+}
+
+.assets_registry_content {
+	padding: 10px 10px 10px 10px;
+	background-color: #FFFFFF;
+}
+
+.rounded {
+	background-color: rgb(255, 255, 255);
+	border: 1px solid rgb(187, 187, 187);
+}
+
+.horizental-menu ul { /* general settings */
+	text-align: left; /* set to left, right or center */
+	margin: 1em 0 1em 0; /* set margins as desired */
+	font: bold 11px verdana, arial, sans-serif; /* set font as desired */
+	border-bottom: 1px solid #3C78B5; /* set border COLOR as desired */
+	list-style-type: none;
+	padding: 3px 10px 3px 10px;
+	/* THIRD number must change with respect to padding-top (X) below */
+}
+
+.horizental-menu ul li { /* do not change */
+	display: inline;
+}
+
+.horizental-menu ul li a { /* settings for all tab links */
+	padding: 3px 4px;
+	/* set padding (tab size) as desired; FIRST number must change with respect to padding-top (X) above */
+	border: 1px solid rgb(187, 187, 187);
+	/* set border COLOR as desired; usually matches border color specified in #tabnav */
+	background-color: #3C78B5;
+	/* set unselected tab background color as desired */
+	color: #FFFFFF; /* set unselected tab link color as desired */
+	margin-right: 0px; /* set additional spacing between tabs as desired */
+	text-decoration: none;
+	border-bottom: none;
+	border-radius: 1em 1em 0em 0em;
+}
+
+.horizental-menu ul a:hover { /* settings for hover effect */
+	background: #114070; /* set desired hover color */
+}
+
+.btn,a.btn {
+	display: inline-block;
+	zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+	*display: inline;
+	vertical-align: baseline;
+	margin: 0 2px;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: 0 -1px -1px rgba(0, 0, 0, .3);
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 1em;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+	padding: 5px 14px;
+	text-transform: uppercase;
+	color: #ffffff;
+	border: 0 none;
+	background: #3C78B5;
+	background: -webkit-gradient(linear, left top, left bottom, from(#3C78B5),
+		to(#114070));
+	background: -moz-linear-gradient(top, #3C78B5, #114070);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3C78B5',
+		endColorstr='#114070');
+	font-weight: bold;
+}
+
+.btn:hover {
+	box-shadow: 0 0 0;
+}
+
+.btn:active {
+	background: #114070;
+	background: -webkit-gradient(linear, left top, left bottom, from(#114070),
+		to(#3C78B5));
+	background: -moz-linear-gradient(top, #114070, #3C78B5);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#114070',
+		endColorstr='#3C78B5');
+}
+
+.dropdown-menu ul {
+	margin: 0px 0px 0px 0px;
+}
+
+.dropdown-menu ul li {
+	padding: 2px 5px 2px 5px;
+}
+
+.dropdown-menu .dropdown {
+	/* Size & position */
+	position: relative;
+	width: 200px;
+	/* Styles */
+	background: #3C78B5;
+	background: -webkit-gradient(linear, left top, left bottom, from(#3C78B5),
+		to(#114070));
+	background: -moz-linear-gradient(top, #3C78B5, #114070);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3C78B5',
+		endColorstr='#114070');
+	color: #FFFFFF;
+	list-style: none;
+	transition: all 0.3s ease-out;
+	top: 10px;
+	border-radius: 1em 1em 1em 1em;
+	/* Hiding */
+	max-height: 0;
+	overflow: hidden;
+	border-radius: 1em 1em 1em 1em;
+}
+
+.dropdown-menu .dropdown li a {
+	display: block;
+	text-decoration: none;
+	transition: all 0.3s ease-out;
+	padding: 5px 0px 5px 0px;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+.dropdown-menu .dropdown li:last-of-type a {
+	border-radius: 0em 0em 1em 1em;
+}
+
+.dropdown-menu .dropdown li:hover {
+	background: #114070;
+	background: -webkit-gradient(linear, left top, left bottom, from(#114070),
+		to(#3C78B5));
+	background: -moz-linear-gradient(top, #114070, #3C78B5);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#114070',
+		endColorstr='#3C78B5');
+}
+
+.dropdown-menu .dropdown:after {
+	border-color: #82d1ff transparent;
+}
+
+.dropdown-menu.active .dropdown {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	max-height: 400px;
+}
+
+i[class*="icon-"] {
+	display: inline-block;
+	padding-right: 6px;
+	vertical-align: text-top;
+	width: 16px;
+	height: 16px;
+}
+
+i[class*="icon-"].icon-trash {
+	background-image: url(icon-trash.png);
+}
+
+.messages-error {
+	background-color: rgba(203, 55, 53, .8);
+	border: 1px solid #cb3735;
+	padding: 10px 10px 10px 10px;
+	border-radius: 1em 1em 1em 1em;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.messages-info {
+	font-size: 12px;
+	font-weight: bold;
+	min-height: 18px;
+	text-align: left;
+	background-color: rgb(51, 102, 153);
+	border: 1px solid rgb(51, 102, 153);
+	padding: 10px 10px 10px 10px;
+	border-radius: 1em 1em 1em 1em;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.messages-success {
+	background-color: #64af30;
+	border: 1px solid #64af30;
+	padding: 10px 10px 10px 10px;
+	border-radius: 1em 1em 1em 1em;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.ui-icon {
+	overflow: hidden;
+	background-repeat: no-repeat;
+	text-indent: -99999px;
+	display: block;
+	padding: 8px;
+	float: left;
+	background-position: center;
+}
+
+.icon-accept {
+	background-image: url("../../../images/icons/accept.png");
+	width: 16px;
+	height: 16px;
+}
+
+.icon-information {
+	background-image: url("../../../images/icons/icon-information.png");
+	width: 16px;
+	height: 16px;
+}
+
+.icon-reject {
+	background-image: url("../../../images/icons/cancel.png");
+	width: 16px;
+	height: 16px;
+}
+
+.icon-edit {
+	background-image: url("../../../images/icons/edit_20.png");
+	width: 16px;
+	height: 16px;
+}
+
+.icon-internal-assignee {
+	background-image: url("../../../images/icons/arrow_right_small.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.icon-external-assignee {
+	background-image: url("../../../images/icons/package.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.icon-culling {
+	background-image: url("../../../images/icons/delete2.png");
+	width: 16px;
+	height: 16px;
+}
+
+.icon-withdraw {
+	background-image: url("../../../images/icons/delete2.png");
+	width: 16px;
+	height: 16px;
+}
+
+.icon-recover {
+	background-image: url("../../../images/icons/undo_16.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.icon-trash {
+	background-image: url("../../../images/icons/trash_16.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.icon-activate {
+	background-image: url("../../../images/icons/accept.png");
+	width: 16px;
+	height: 16px;
+}
+.icon-deactivate {
+	background-image: url("../../../images/icons/cancel.png");
+	width: 16px;
+	height: 16px;
+}
+.clear-form {
+	padding: 0px;
+}
+
+.pull-left {
+	float: left;
+}
+
+.pull-rigth {
+	float: right;
+}
+
+.middle-tag{
+	vertical-align: middle;
+}

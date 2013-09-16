@@ -1,0 +1,53 @@
+<style type="text/css">
+	#parse("css/main.css")
+</style>
+	<form name="new-asset"  method="post" action="JiraAssetsRegisterAssetDetailsWebAction.jspa">
+		#parse("templates/includes/plugin_head.vm")
+		<div id="assets_registry_content" class="assets_registry_content rounded grid">
+			#parse("templates/includes/horizentalMenu.vm")
+			<div class="gadget-container">
+				<h3 id="gadget-10001-title" class="dashboard-item-title">
+				#if($info)
+					$i18n.getText("new.asset.title.asset.info")
+				#elseif ($edit)
+					$i18n.getText("new.asset.title.asset.edit")
+				#else
+					$i18n.getText("new.asset.title.asset.add")
+				#end
+				</h3>
+				<div style="padding: 10px 10px 10px 10px;">
+					#if($error || $editError || $createError)
+					<div class="gadget-container">
+						<div class="messages-error">
+							#if($error)
+								$i18n.getText("error.new.asset.fields")
+							#elseif($createError)
+								$i18n.getText("error.new.asset.create")
+							#elseif($editError)
+								$i18n.getText("error.new.asset.save")
+							#end
+						</div>
+					</div>
+					<br/>
+					#end
+					#if($createSuccess || $editSuccess)
+					<div class="gadget-container">
+						<div class="messages-success">
+							#if($createSuccess) $i18n.getText("success.new.asset.create") 
+							#elseif($editSuccess)  $i18n.getText("success.new.asset.save")
+							#end
+						</div>
+					</div>
+					<br/>
+					#end
+					#if($info)
+						#parse("templates/includes/AssetDetailsWebAction/info.vm")
+					#elseif ($edit)
+						#parse("templates/includes/AssetDetailsWebAction/edit.vm")
+					#else
+						#parse("templates/includes/AssetDetailsWebAction/default.vm")
+					#end
+				</div>
+			</div>
+		</div>
+	</form>

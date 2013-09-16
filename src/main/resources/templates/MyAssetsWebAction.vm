@@ -1,0 +1,38 @@
+<style type="text/css">
+	#parse("css/main.css")
+</style>
+	<form action="/secure/JiraAssetsRegisterMyAssetsWebAction.jspa">
+		#parse("templates/includes/plugin_head.vm")
+		<div id="assets_registry_content" class="assets_registry_content rounded grid">
+			#parse("templates/includes/horizentalMenu.vm")
+			<div class="gadget-container">
+				<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("my.assets.title.my.assets")</h3>
+				<div style="padding: 10px 10px 10px 10px;">
+					#if($changeError || $notChanged)
+					<div class="gadget-container">
+						<div class="messages-error">
+							#if($changeError) $i18n.getText("error.my.asset.change")
+							#elseif($notChanged) $i18n.getText("error.my.asset.not.changed")
+							#end
+						</div>
+					</div>
+					<br/>
+					#end
+					#if($changeSuccess)
+					<div class="gadget-container">
+						<div class="messages-success">
+							#if($changeSuccess) $i18n.getText("success.my.asset.change") 
+							#end
+						</div>
+					</div>
+					<br/>
+					#end
+					#if($change)
+						#parse("templates/includes/MyAssetsWebAction/change.vm")
+					#else
+						#parse("templates/includes/MyAssetsWebAction/default.vm")
+					#end
+				</div>
+			</div>
+		</div>
+	</form>

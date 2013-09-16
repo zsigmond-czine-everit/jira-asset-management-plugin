@@ -1,0 +1,121 @@
+					<div class="gadget-container">
+						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("field.mgmnt.title.required.fields")</h3>
+						<div class="dashboard-item-content">
+							<table id="required-field" cellspacing="0" cellpadding="2" class="basic-content-table" style="width: 50%">
+								<thead>
+									<tr>
+										<th>Field name</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									#foreach ($field in $requiredFields)
+										<tr>
+											<td><label>$field.fieldName</label></td>
+											<td>
+												#if(($field.fieldName.equals($FIELD_NAME_ASSIGNEE) || $field.fieldName.equals($FIELD_NAME_DEVICE_NAME)))
+		    									#else
+												<form name="field-reguired-managent-operation" method="post" action="JiraAssetsRegisterFieldManagementWebAction.jspa" class="clear-form">
+													<a href="javascript:;" onclick="parentNode.submit();" class="ui-icon icon-trash" title="$i18n.getText("icon.trash")"></a>
+		    										<input type="hidden" name="trashes[]" value="$field.fieldName"/>
+		    									</form>
+		    									<form name="field-reguired-managent-operation" method="post" action="JiraAssetsRegisterFieldManagementWebAction.jspa" class="clear-form">
+		    										#if($field.active)
+		    										<a href="javascript:;" onclick="parentNode.submit();" class="ui-icon icon-deactivate" title="$i18n.getText("icon.deactivate")"> deactivate   </a>
+		    										#else
+		    										<a href="javascript:;" onclick="parentNode.submit();"class="ui-icon icon-activate" title="$i18n.getText("icon.activate")" > activate  </a>
+		    										#end
+		    										<input type="hidden" name="actives[]" value="$field.fieldName"/>
+		    									</form>
+		    									<a href="/secure/JiraAssetsRegisterFieldManagementWebAction!default.jspa?editField=true&fieldName=$field.fieldName" class="ui-icon icon-edit" title="Edit field">
+		    									#end
+	    									</td>
+										</tr>
+									#end
+									<tr>
+										<form name="field-reguired-managent" method="post" action="JiraAssetsRegisterFieldManagementWebAction.jspa" class="clear-form">
+											<td><input id="newRequiredField" name="newRequiredField" type="text"/></td>
+											<td><input id="submitNewRequiredField"  type="submit" name="submitNewRequiredField" value="$i18n.getText('field.mgmnt.button.add')" class="btn"></td>
+										</form>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<br/>
+					<div class="gadget-container" style="magin-left: 40px;">
+						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("field.mgmnt.title.optinial.fields")</h3>
+						<div class="dashboard-item-content">
+							<table id="optional-field" cellspacing="0" cellpadding="2" class="basic-content-table" style="width: 50%">
+								<thead>
+									<tr>
+										<th>Field name</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									#foreach ($field in $optionalFields)
+										<tr>
+											<td><label>$field.fieldName</label></td>
+											<td>
+												<form name="field-reguired-managent-operation" method="post" action="JiraAssetsRegisterFieldManagementWebAction.jspa" class="clear-form">
+													<a href="javascript:;" onclick="parentNode.submit();" class="ui-icon icon-trash" title="$i18n.getText("icon.trash")"></a>
+		    										<input type="hidden" name="trashes[]" value="$field.fieldName"/>
+		    									</form>
+		    									<form name="field-reguired-managent-operation" method="post" action="JiraAssetsRegisterFieldManagementWebAction.jspa" class="clear-form">
+		    										#if($field.active)
+		    										<a href="javascript:;" onclick="parentNode.submit();" class="ui-icon icon-deactivate" title="$i18n.getText("icon.deactivate")"> deactivate   </a>
+		    										#else
+		    										<a href="javascript:;" onclick="parentNode.submit();"class="ui-icon icon-activate" title="$i18n.getText("icon.activate")" > activate  </a>
+		    										#end
+		    										<input type="hidden" name="actives[]" value="$field.fieldName"/>
+		    									</form>
+		    									<a href="/secure/JiraAssetsRegisterFieldManagementWebAction!default.jspa?editField=true&fieldName=$field.fieldName" class="ui-icon icon-edit" title="Edit field">
+	    									</td>
+										</tr>
+									#end
+									<tr>
+										<form name="field-optional-managent" method="post" action="JiraAssetsRegisterFieldManagementWebAction.jspa" class="clear-form">
+											<td><input id="newOptionalField" name="newOptionalField" type="text"/></td>
+											<td><input id="submitNewOptionalField"  type="submit" name="submitNewOptionalField" value="$i18n.getText('field.mgmnt.button.add')" class="btn"></td>
+										</form>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<br/>
+					<form method="post" action="JiraAssetsRegisterFieldManagementWebAction!default.jspa" class="clear-form">
+						<div id="dialog-confirm" class="gadget-container" style="magin-left: 40px; display:none;">
+							<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("field.mgmnt.title.clear.databese")</h3>
+							<div class="dashboard-item-content">
+								<div>
+									<b>$i18n.getText("field.mgmnt.clear.database.text")</b>
+								</div>
+								<br/>
+								<div>
+									<input type="checkbox" id="acceptChekbox" name="acceptChekbox" value="accept" onclick="show"> $i18n.getText("field.mgmnt.clear.database.agree")
+								</div>
+								<br/>
+								<div style="padding: 0px 0px 30px 0px; clear:both">
+									<input type="hidden" id="deleteAll" name="deleteAll" value="true"/>
+									<input id="submit_delete" type="submit" name="submit_delete" value="$i18n.getText('field.mgmnt.button.clear.database')" class="btn pull-rigth">
+								</div>
+								<div stlye="clear:both"></div>
+							</div>
+						</div
+						<div style="padding: 0px 0px 20px 0px;">
+							<div style="padding: 0px 0px 20px 0px;">
+								<button type="button" id="clearDatabase" class="btn pull-rigth">$i18n.getText("field.mgmnt.button.clear.database")</button>
+							</div>
+							<div stlye="clear:both"></div>
+							<br/>
+							<script type='text/javascript'>
+								document.getElementById("clearDatabase").addEventListener("click", 
+	                            function(){
+	                                document.getElementById("dialog-confirm").style.display = "block";
+	                                document.getElementById("clearDatabase").style.display = "none";
+								});
+							</script>
+						</div>
+					</form>
