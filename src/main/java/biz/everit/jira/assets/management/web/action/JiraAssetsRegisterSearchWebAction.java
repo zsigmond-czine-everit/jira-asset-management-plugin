@@ -283,12 +283,14 @@ public class JiraAssetsRegisterSearchWebAction extends JiraWebActionSupport {
             search = true;
             List<String> issueKeys = new ArrayList<String>();
             List<AssetField> requiredFields = requiredFields();
+            Field assigneeField = null;
             for (AssetField field : requiredFields) {
                 String[] fieldValue = request.getParameterValues(field.getFieldName());
                 if (isValue(fieldValue)) {
                     if (field.getFieldName().equals(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE)) {
                         issueKeys = arPlugin.findIssueKeysByAssigneName(fieldValue[0]);
-                        searchFields.add(new Field(JiraAssetsRegisterSearchWebAction.getFIELD_NAME_ASSIGNEE(), fieldValue[0]));
+                        assigneeField = new Field(JiraAssetsRegisterSearchWebAction.getFIELD_NAME_ASSIGNEE(),
+                                fieldValue[0]);
                     } else {
                         searchFields.add(new Field(field.getFieldName(), fieldValue[0]));
                     }
@@ -366,6 +368,9 @@ public class JiraAssetsRegisterSearchWebAction extends JiraWebActionSupport {
             }
             backButtonValue = "/secure/JiraAssetsRegisterSearchWebAction.jspa?submit_search=Search" + params;
             searchedAssets = arPlugin.convertIssueAndAssetDetailsToAsset(ads, iks);
+            if (assigneeField != null) {
+                searchFields.add(assigneeField);
+            }
             filledFields = searchFields;
             return super.doExecute();
         } else {
