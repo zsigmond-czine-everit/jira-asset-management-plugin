@@ -1,9 +1,10 @@
-<atlassian-plugin key="biz.everit.jira.assets.registy"
+<atlassian-plugin key="biz.everit.jira.assets.management"
 	name="Assets Registry" plugins-version="2">
 	<plugin-info>
-		<description>If remove asset registry (ASSET) project must be delete Active Object entity tables! Megteheted itt meg itt.</description>
+		<description>If remove asset registry (ASSET) project must be delete Active Object entity tables!</description>
 		<version>0.1-SNAPSHOOT</version>
-		<vendor name="Empty" url="Emty" />
+		<application-version min="4.4" />
+		<vendor name="Everit.org" url="https://www.everit.biz" />
 	</plugin-info>
 
 	<component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
@@ -12,12 +13,12 @@
 	
 	<ao key="ao-module">
 	  <description>The module configuring the Active Objects service used by this plugin</description>
-	  <entity>biz.everit.jira.assets.registry.ao.entity.AssetEntity</entity>
-	  <entity>biz.everit.jira.assets.registry.ao.entity.AssetFieldEntity</entity>
+	  <entity>biz.everit.jira.assets.management.ao.entity.AssetEntity</entity>
+	  <entity>biz.everit.jira.assets.management.ao.entity.AssetFieldEntity</entity>
 	</ao>
 
-	<component key="assets_registry_plugin" name="Assets Registry component" class="biz.everit.jira.assets.registry.service.JiraPluginServiceImpl">
-        <interface class="biz.everit.jira.assets.registry.service.api.JiraPluginService" />
+	<component key="assets_registry_plugin" name="Assets Registry component" class="biz.everit.jira.assets.management.service.JiraPluginServiceImpl">
+        <interface class="biz.everit.jira.assets.management.service.api.JiraPluginService" />
         <interface>org.springframework.beans.factory.InitializingBean</interface>
     </component>
     
@@ -37,7 +38,7 @@
 		class="java.lang.Object">
 		<actions>
 			<action
-				name="biz.everit.jira.assets.registry.web.action.JiraAssetsRegisterMyAssetsWebAction"
+				name="biz.everit.jira.assets.management.web.action.JiraAssetsRegisterMyAssetsWebAction"
 				alias="JiraAssetsRegisterMyAssetsWebAction">
 				<view name="success">/templates/MyAssetsWebAction.vm
 				</view>
@@ -47,7 +48,7 @@
 				</view>
 			</action>
 			<action
-				name="biz.everit.jira.assets.registry.web.action.JiraAssetsRegisterAssetDetailsWebAction"
+				name="biz.everit.jira.assets.management.web.action.JiraAssetsRegisterAssetDetailsWebAction"
 				alias="JiraAssetsRegisterAssetDetailsWebAction">
 				<view name="success">/templates/AssetDetailsWebAction.vm
 				</view>
@@ -57,7 +58,7 @@
 				</view>
 			</action>
 			<action
-				name="biz.everit.jira.assets.registry.web.action.JiraAssetsRegisterSearchWebAction"
+				name="biz.everit.jira.assets.management.web.action.JiraAssetsRegisterSearchWebAction"
 				alias="JiraAssetsRegisterSearchWebAction">
 				<view name="success">/templates/SearchWebAction.vm
 				</view>
@@ -67,7 +68,7 @@
 				</view>
 			</action>
 			<action
-				name="biz.everit.jira.assets.registry.web.action.JiraAssetsRegisterFieldManagementWebAction"
+				name="biz.everit.jira.assets.management.web.action.JiraAssetsRegisterFieldManagementWebAction"
 				alias="JiraAssetsRegisterFieldManagementWebAction">
 				<view name="success">/templates/FieldManagementWebAction.vm
 				</view>

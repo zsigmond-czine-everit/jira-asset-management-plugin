@@ -4,8 +4,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>biz.everit.jira</groupId>
-	<artifactId>jira-assets-registry</artifactId>
+	<groupId>biz.everit.jira.assets.management</groupId>
+	<artifactId>jira-assets-management-plugin</artifactId>
 	<version>0.1-SNAPSHOOT</version>
 
 	<organization>
@@ -14,10 +14,16 @@
 	</organization>
 
 	<name>jira-assets-registry</name>
-	<description>This is the biz.everit.jira:jira-assets-registry plugin for Atlassian JIRA.</description>
+	<description>This is the biz.everit.jira.assets.management:jira-assets-management-plugin plugin for Atlassian JIRA.</description>
 	<packaging>jar</packaging>
-	
+
 	<dependencies>
+		<dependency>
+			<groupId>com.atlassian.usercompatibility</groupId>
+			<artifactId>usercompatibility-jira</artifactId>
+			<version>0.18</version>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
@@ -34,18 +40,18 @@
 			<artifactId>activeobjects-plugin</artifactId>
 			<version>0.23.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.atlassian.activeobjects</groupId>
 			<artifactId>activeobjects-spi</artifactId>
 			<version>0.23.0</version>
 		</dependency>
-		
+
 		<dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-        </dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+		</dependency>
 	</dependencies>
 
 	<properties>
@@ -54,5 +60,32 @@
 		<amps.version>4.1.7</amps.version>
 		<plugin.testrunner.version>1.1.1</plugin.testrunner.version>
 	</properties>
-
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>1</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptor>assembly.xml</descriptor>
+                        </configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

@@ -1,7 +1,7 @@
 <style type="text/css">
 	#parse("css/main.css")
 </style>
-	<form name="new-asset"  method="post" action="JiraAssetsRegisterAssetDetailsWebAction.jspa">
+	<form name="new-asset"  method="post" action="JiraAssetsRegisterAssetDetailsWebAction.jspa?test=test">
 		#parse("templates/includes/plugin_head.vm")
 		<div id="assets_registry_content" class="assets_registry_content rounded grid">
 			#parse("templates/includes/horizentalMenu.vm")

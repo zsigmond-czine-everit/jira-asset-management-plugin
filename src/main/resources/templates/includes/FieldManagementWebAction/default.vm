@@ -1,11 +1,11 @@
 					<div class="gadget-container">
 						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("field.mgmnt.title.required.fields")</h3>
 						<div class="dashboard-item-content">
-							<table id="required-field" cellspacing="0" cellpadding="2" class="basic-content-table" style="width: 50%">
+							<table id="required-field" cellspacing="0" cellpadding="2" class="fixed-table-two-column center-table colors-table percent-table-column">
 								<thead>
 									<tr>
-										<th>Field name</th>
-										<th>Action</th>
+										<th>$i18n.getText("table.field.name")</th>
+										<th>$i18n.getText("table.field.value")</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -46,11 +46,11 @@
 					<div class="gadget-container" style="magin-left: 40px;">
 						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("field.mgmnt.title.optinial.fields")</h3>
 						<div class="dashboard-item-content">
-							<table id="optional-field" cellspacing="0" cellpadding="2" class="basic-content-table" style="width: 50%">
+							<table id="optional-field" cellspacing="0" cellpadding="2" class="fixed-table-two-column center-table colors-table percent-table-column">
 								<thead>
 									<tr>
-										<th>Field name</th>
-										<th>Action</th>
+										<th>$i18n.getText("table.field.name")</th>
+										<th>$i18n.getText("table.field.value")</th>
 									</tr>
 								</thead>
 								<tbody>

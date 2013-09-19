@@ -18,7 +18,7 @@
 					<div class="gadget-container">
 						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("my.assets.title.assets")</h3>
 						<div class="dashboard-item-content">
-							<table cellspacing="0" cellpadding="2" class="basic-content-table">
+							<table id="myAssetsTable" cellspacing="0" cellpadding="2" class="basic-content-table">
 								<thead>
 									<tr>
 										<th width="100px">$i18n.getText("table.issue.id")</th>
@@ -48,13 +48,19 @@
 								#end
 								</tbody>
 							</table>
+							<div stlye="padding: 0px 0px 20px 0px">
+								<div id="myAssetsPageNavPosition" class="pull-rigth">
+
+								</div>
+								<div style="clear: both"></div>
+							</div>
 						</div>
 					</div>
 					<br/>
 					<div class="gadget-container">
 						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("my.assets.title.received.assets")</h3>
 						<div class="dashboard-item-content">
-							<table cellspacing="0" cellpadding="2" class="basic-content-table">
+							<table id="receivedAssetsTable" cellspacing="0" cellpadding="2" class="basic-content-table">
 								<thead>
 									<tr>
 										<th width="100px">$i18n.getText("table.issue.id")</th>
@@ -84,13 +90,19 @@
 								#end
 								</tbody>
 							</table>
+							<div stlye="padding: 0px 0px 20px 0px">
+								<div id="receivedAssetsPageNavPosition" class="pull-rigth">
+
+								</div>
+								<div style="clear: both"></div>
+							</div>
 						</div>
 					</div>
 					<br/>
 					<div class="gadget-container">
 						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("my.assets.title.delivered.assets")</h3>
 						<div class="dashboard-item-content">
-							<table cellspacing="0" cellpadding="2" class="basic-content-table">
+							<table id="deliveredAssetsTable" cellspacing="0" cellpadding="2" class="basic-content-table">
 								<thead>
 									<tr>
 										<th width="100px">$i18n.getText("table.issue.id")</th>
@@ -122,6 +134,30 @@
 								#end
 								</tbody>
 							</table>
+							<div stlye="padding: 0px 0px 20px 0px">
+								<div id="deliveredAssetsPageNavPosition" class="pull-rigth">
+									
+								</div>
+								<div style="clear: both"></div>
+							</div>
 						</div>
 					</div>
 					<br/>
+					<script type="text/javascript">
+				        var myAssets = new Pager('myAssetsTable', 10); 
+				        myAssets.init(); 
+				        myAssets.showPageNav('myAssets', 'myAssetsPageNavPosition'); 
+				        myAssets.showPage('myAssets',1);
+				        
+				        var deliveredAssets = new Pager('deliveredAssetsTable', 10); 
+				        deliveredAssets.init(); 
+				        deliveredAssets.showPageNav('deliveredAssets', 'deliveredAssetsPageNavPosition'); 
+				        deliveredAssets.showPage('deliveredAssets',1);
+				        
+				        var receivedAssets = new Pager('receivedAssetsTable', 10); 
+				        receivedAssets.init(); 
+				        receivedAssets.showPageNav('receivedAssets', 'receivedAssetsPageNavPosition'); 
+				        receivedAssets.showPage('receivedAssets',1);
+				        
+				        #parse("js/paging.js")
+					</script>

@@ -2,8 +2,15 @@
 						<div class="gadget-container">
 							<h3 id="gadget-10001-title" class="dashboard-item-title">$editFieldName</h3>
 							<div class="dashboard-item-content">
-								<table id="required-field" cellspacing="0" cellpadding="2" class="basic-search-table">
+								<table id="required-field" cellspacing="0" cellpadding="2" class="fixed-table-two-column center-table colors-table percent-table-column ">
+									<thead>
+										<tr>
+											<th width="40%">$i18n.getText("table.field.name")</th>
+											<th width="60%" >$i18n.getText("table.field.value")</th>
+										</tr>
+									</thead>
 									<tbody>
+										<tr>
 											<td>$i18n.getText("table.field.name")</td>
 											<td><input type="text" name="newfieldName" value="$editFieldName"/></td>
 										</tr>
@@ -13,10 +20,9 @@
 						</div>
 						<br/>
 						<div>
-							<a href="$backButtonValue" class="btn pull-left">$i18n.getText('my.assets.button.back')</a>
 							<input type="hidden" name="editField" value="true"/>
 							<input type="hidden" name="fieldName" value="$editFieldName"/>
-							<a href="/secure/JiraAssetsRegisterFieldManagementWebAction!default.jspa" class="btn pull-rigth">$i18n.getText('field.mgmnt.button.cancel')</a>
+							<a href="$backButtonValue" class="btn pull-rigth">$i18n.getText('field.mgmnt.button.cancel')</a>
 							<input id="submit"  type="submit" name="submit_save" value="$i18n.getText('field.mgmnt.button.save')" class="btn pull-rigth">
 						</div>
 						<div style="clear: both">
