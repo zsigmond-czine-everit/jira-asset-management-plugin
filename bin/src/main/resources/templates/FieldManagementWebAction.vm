@@ -1,0 +1,44 @@
+<style type="text/css">
+	#parse("css/main.css")
+</style>
+	<div style="padding: 10px 10px 10px 10px;">
+		#parse("templates/includes/plugin_head.vm")
+		<div id="assets_registry_content" class="assets_registry_content rounded grid">
+			#parse("templates/includes/horizentalMenu.vm")
+			<div class="gadget-container">
+				<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("field.mgmnt.title.field.mgmnt")</h3>
+				<div style="padding: 10px 10px 10px 10px;">
+				 	#if( ($createError) || ($deleteError) || ($activeError) || ($editError) || ($emptyError) || ($deleteAllError))
+					<div class="gadget-container">
+						<div class="messages-error">
+							#if($createError) $i18n.getText("error.field.create")
+							#elseif($deleteError) $i18n.getText("error.field.delete")
+							#elseif($editError) $i18n.getText("error.field.edit")
+							#elseif($emptyError) $i18n.getText("error.field.empty")
+							#elseif($deleteAllError) $i18n.getText("error.field.delete.all")
+							#else $i18n.getText("error.field.active") #end
+						</div>
+					</div>
+					<br/>
+					#end
+					#if(($createSuccess) || ($deleteSuccess) || ($activeSuccess) || ($editSuccess) || ($deleteAllSuccess))
+					<div class="gadget-container">
+						<div class="messages-success">
+							#if($createSuccess) $i18n.getText("success.field.create") 
+							#elseif($deleteSuccess) $i18n.getText("success.field.delete")
+							#elseif($editSuccess) $i18n.getText("success.field.edit")
+							#elseif($deleteAllSuccess) $i18n.getText("success.field.delete.all")
+							#else $i18n.getText("success.field.active") #end
+						</div>
+					</div>
+					<br/>
+					#end
+					#if($edit)
+						#parse("templates/includes/FieldManagementWebAction/edit.vm")
+					#else
+						#parse("templates/includes/FieldManagementWebAction/default.vm")
+					#end
+				</div>
+			</div>
+		</div>
+	</div>
