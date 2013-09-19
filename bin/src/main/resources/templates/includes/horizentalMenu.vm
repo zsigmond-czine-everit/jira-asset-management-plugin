@@ -1,8 +1,0 @@
-			<div id="plugin_tab" class="horizental-menu">
-				<ul>
-					<li><a href="JiraAssetsRegisterMyAssetsWebAction!default.jspa">$i18n.getText("menu.assets")</a></li>
-					<li><a href="JiraAssetsRegisterSearchWebAction!default.jspa">$i18n.getText("menu.search")</a></li>
-					<li><a href="JiraAssetsRegisterAssetDetailsWebAction!default.jspa">$i18n.getText("menu.new.assets")</a></li>
-					#if($administrator)<li><a href="JiraAssetsRegisterFieldManagementWebAction!default.jspa">$i18n.getText("menu.field.mgmnt")</a></li>#end
-				</ul>
-			</div>

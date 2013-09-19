@@ -1,3 +1,0 @@
-		<div id="plugin_head" class="item-header">
-			<h1 class="item-summary">$i18n.getText("my.plugin.name")</h1>
-		</div>
