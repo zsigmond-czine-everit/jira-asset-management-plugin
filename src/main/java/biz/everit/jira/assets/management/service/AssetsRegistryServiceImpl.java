@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.java.ao.Query;
+
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 
@@ -159,8 +161,7 @@ public class AssetsRegistryServiceImpl implements AssetsRegistryService {
             public Boolean doInTransaction() {
                 boolean result = false;
                 AssetEntity[] ares = ao.find(AssetEntity.class,
-                        "FIELD_ID = ?",
-                        fe);
+                        Query.select().where("FIELD_ID = ?", fe));
                 if ((ares != null) && (ares.length > 0)) {
                     result = true;
                 }
@@ -287,7 +288,7 @@ public class AssetsRegistryServiceImpl implements AssetsRegistryService {
                 .executeInTransaction(new TransactionCallback<List<AssetFieldEntity>>() {
                     public List<AssetFieldEntity> doInTransaction() {
                         final AssetFieldEntity[] fields = ao.find(AssetFieldEntity.class,
-                                "REQUIRED = FALSE");
+                                Query.select().where("REQUIRED = FALSE").order("FIELD_NAME ASC"));
                         if ((fields != null) && (fields.length > 0)) {
                             return Arrays.asList(fields);
                         } else {
@@ -310,7 +311,7 @@ public class AssetsRegistryServiceImpl implements AssetsRegistryService {
                 .executeInTransaction(new TransactionCallback<List<AssetFieldEntity>>() {
                     public List<AssetFieldEntity> doInTransaction() {
                         final AssetFieldEntity[] fields = ao.find(AssetFieldEntity.class,
-                                "REQUIRED = TRUE");
+                                Query.select().where("REQUIRED = TRUE").order("FIELD_NAME ASC"));
                         if ((fields != null) && (fields.length > 0)) {
                             return Arrays.asList(fields);
                         } else {
@@ -334,8 +335,7 @@ public class AssetsRegistryServiceImpl implements AssetsRegistryService {
         return ao.executeInTransaction(new TransactionCallback<AssetDetail>() {
             public AssetDetail doInTransaction() {
                 AssetEntity[] ares = ao.find(AssetEntity.class,
-                        "ISSUE_KEY = ?",
-                        issueKey);
+                        Query.select().where("ISSUE_KEY = ?", issueKey));
                 AssetDetail ad = null;
                 if ((ares != null) && (ares.length > 0)) {
                     ad = new AssetDetail();
@@ -363,10 +363,13 @@ public class AssetsRegistryServiceImpl implements AssetsRegistryService {
                 result = ao.executeInTransaction(new TransactionCallback<List<AssetDetail>>() {
                     public List<AssetDetail> doInTransaction() {
                         List<AssetDetail> resultTmp = new ArrayList<AssetDetail>();
-                        AssetEntity[] ares = ao.find(AssetEntity.class,
-                                "FIELD_ID = ? AND LOWER(FIELD_VALUE) LIKE '%" + field.getFieldValue().toLowerCase()
-                                        + "%'",
-                                findField.getId());
+                        AssetEntity[] ares = ao.find(
+                                AssetEntity.class,
+                                Query.select()
+                                        .where("FIELD_ID = ? AND LOWER(FIELD_VALUE) LIKE '%"
+                                                + field.getFieldValue().toLowerCase()
+                                                + "%'", findField.getId())
+                                        .order("ISSUE_KEY ASC"));
                         if ((ares != null) && (ares.length > 0)) {
                             int aresLength = ares.length;
                             for (int i = 0; i < aresLength; i++) {
@@ -451,8 +454,7 @@ public class AssetsRegistryServiceImpl implements AssetsRegistryService {
                 .executeInTransaction(new TransactionCallback<AssetFieldEntity>() {
                     public AssetFieldEntity doInTransaction() {
                         final AssetFieldEntity[] fields = ao.find(AssetFieldEntity.class,
-                                "FIELD_NAME = ?",
-                                fieldName);
+                                Query.select().where("FIELD_NAME = ?", fieldName));
                         if ((fields != null) && (fields.length > 0)) {
                             return fields[0];
                         }
@@ -500,8 +502,7 @@ public class AssetsRegistryServiceImpl implements AssetsRegistryService {
         return ao.executeInTransaction(new TransactionCallback<AssetFieldEntity>() {
             public AssetFieldEntity doInTransaction() {
                 final AssetFieldEntity[] fields = ao.find(AssetFieldEntity.class,
-                        "FIELD_NAME = ? AND REQUIRED = ?",
-                        fieldName, required);
+                        Query.select().where("FIELD_NAME = ? AND REQUIRED = ?", fieldName, required));
                 if ((fields != null) && (fields.length > 0)) {
                     return fields[0];
                 }
@@ -523,8 +524,7 @@ public class AssetsRegistryServiceImpl implements AssetsRegistryService {
             return ao.executeInTransaction(new TransactionCallback<Boolean>() {
                 public Boolean doInTransaction() {
                     final AssetFieldEntity[] fields = ao.find(AssetFieldEntity.class,
-                            "FIELD_NAME = ?",
-                            oldFieldName);
+                            Query.select().where("FIELD_NAME = ?", oldFieldName));
                     if ((fields != null) && (fields.length == 1)) {
                         fields[0].setFieldName(newFieldName);
                         fields[0].save();
@@ -545,8 +545,7 @@ public class AssetsRegistryServiceImpl implements AssetsRegistryService {
             return ao.executeInTransaction(new TransactionCallback<Boolean>() {
                 public Boolean doInTransaction() {
                     AssetEntity[] ares = ao.find(AssetEntity.class,
-                            "ISSUE_KEY = ?",
-                            asset.getIssueKey());
+                            Query.select().where("ISSUE_KEY = ?", asset.getIssueKey()));
                     if ((ares != null) && (ares.length > 0)) {
                         for (AssetEntity are : ares) {
                             String assetFieldValue = asset.getFields().get(are.getField().getFieldName());

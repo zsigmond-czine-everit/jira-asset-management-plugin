@@ -90,9 +90,7 @@
 							    <span class="btn">$i18n.getText("search.button.add.more.fields")</span>
 							    <ul id="dropdown-list" class="dropdown">
 							    	#foreach ($field in $showableOptinalFields)
-							    		#if($field.active)
 							    	<li id="key_$field.id"><a onclick="addRow('key_$field.id', '$field.fieldName')">$field.fieldName</a></li>
-							    		#end
 							    	#end
 							    </ul>
 							</div>
@@ -130,7 +128,7 @@
 										<td><a href="/secure/ViewProfile.jspa?name=$asset.assignee.name" class="issue-link">$asset.assignee.displayName</a></td>
 										<td>$asset.status</td>
 										<td>
-											<a href="/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?actionName=$actionViewDetails&issueKey=$asset.issueKey&backPageUrl=$backButtonValue" class="ui-icon icon-information" title="$i18n.getText("icon.info")"></a>
+											<a href="#" id="$asset.issueKey" class="ui-icon icon-information" title="$i18n.getText("icon.info")"></a>
 										#if($asset.status.equals($statusOpenName) && $asset.loggedUserIsAssignee)
 											<a href="/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?actionName=$actionEdtiDetails&issueKey=$asset.issueKey&backPageUrl=$backButtonValue" class="ui-icon icon-edit" title="$i18n.getText("icon.edit")"></a>
 											<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionInternalHandover&backPageUrl=$backButtonValue" class="ui-icon icon-internal-assignee" title="$i18n.getText("icon.internal.assignee")"></a>
@@ -164,6 +162,80 @@
 				        searchResult.init(); 
 				        searchResult.showPageNav('searchResult', 'searchResultPageNavPosition'); 
 				        searchResult.showPage('searchResult',1);
+				        
+				        #foreach ($asset in $searchedAssets)
+			        		AJS.$("#$asset.issueKey").click(function() {
+			        			var dialog = new AJS.Dialog({
+								    width: 625, 
+								    height: 400, 
+								    id: "view-details-dialog", 
+								});
+								dialog.addHeader("$asset.issueKey - $asset.deviceName");
+								dialog.addPanel("SinglePanel", '<div class="gadget-container">'+
+							        '<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("new.asset.title.asset")</h3>'+
+									'<div style="padding: 10px 10px 10px 10px;">'+
+										'<div class="gadget-container">'+
+											'<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("new.asset.title.required.fields")</h3>'+
+											'<div class="dashboard-item-content">'+
+												'<table id="required-field" cellspacing="0" cellpadding="2" class="fixed-table-two-column center-table colors-table">'+
+													'<thead>'+
+														'<tr>'+
+															'<th width="40%">$i18n.getText("table.field.name")</th>'+
+															'<th width="60%">$i18n.getText("table.field.value")</th>'+
+														'</tr>'+
+													'</thead>'+
+													'<tbody>'+
+													#foreach ($field in $requiredFields)
+														'<tr>'+
+														#if($asset.assetDetails.fields.get($field.fieldName))
+															#if($field.fieldName.equals($FIELD_NAME_ASSIGNEE))
+																'<td>$i18n.getText("device.label.assignee")</td>'+
+																'<td>$asset.assignee.displayName</td>'+
+															#else
+																'<td>$field.fieldName</td>'+
+																'<td>$asset.assetDetails.fields.get($field.fieldName)</td>'+
+															#end
+														#end
+														'</tr>'+
+													#end
+													'</tbody>'+
+												'</table>'+
+											'</div>'+
+										'</div>'+
+										'<br/>'+
+										'<div class="gadget-container">'+
+											'<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("new.asset.title.optinial.fields")</h3>'+
+											'<div class="dashboard-item-content">'+
+												'<table id="optional-field" cellspacing="0" cellpadding="2" class="fixed-table-two-column center-table colors-table">'+
+													'<thead>'+
+														'<tr>'+
+															'<th width="40%">$i18n.getText("table.field.name")</th>'+
+															'<th width="60%">$i18n.getText("table.field.value")</th>'+
+														'</tr>'+
+													'</thead>'+
+													'<tbody>'+
+														#foreach ($field in $optionalFields)
+															'<tr>'+
+															#if($asset.assetDetails.fields.get($field.fieldName))
+																'<td>$field.fieldName</td>'+
+																'<td>$asset.assetDetails.fields.get($field.fieldName)</td>'+
+															#end
+															'</tr>'+
+														#end
+													'</tbody>'+
+												'</table>'+
+											'</div>'+
+										'</div>'+
+										'<br/>'+
+									'</div>'+
+								'</div>'+
+								'<br/>', "singlePanel");
+								dialog.addButton("OK", function (dialog) {
+								    dialog.hide();
+								});
+								dialog.show();
+						    });
+				        #end
 				        
 				        #parse("js/paging.js")
 					</script>

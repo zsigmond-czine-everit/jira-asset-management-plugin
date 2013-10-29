@@ -18,15 +18,7 @@
 					</div>
 					<br/>
 					#end
-					#if($changeSuccess)
-					<div class="gadget-container">
-						<div class="messages-success">
-							#if($changeSuccess) $i18n.getText("success.my.asset.change") 
-							#end
-						</div>
-					</div>
-					<br/>
-					#end
+					
 					#if($change)
 						#parse("templates/includes/MyAssetsWebAction/change.vm")
 					#else

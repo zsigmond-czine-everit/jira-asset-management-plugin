@@ -399,7 +399,34 @@ public class JiraPluginServiceImpl implements JiraPluginService {
                 }
             }
         }
-        return assets;
+        List<Asset> result = new ArrayList<Asset>();
+        for (Asset a : assets) {
+            int resultIndex = 0;
+
+            for (Asset b : result) {
+                int compareTo = a.getDeviceName().compareTo(b.getDeviceName());
+                if (compareTo <= 0) {
+                    result.add(resultIndex, a);
+                    break;
+                }
+
+                // if (compareTo < 0) {
+                // result.add(resultIndex, a);
+                // break;
+                // }
+
+                if ((resultIndex + 1) == result.size()) {
+                    result.add(a);
+                    break;
+                }
+
+                resultIndex++;
+            }
+            if (result.size() == 0) {
+                result.add(a);
+            }
+        }
+        return result;
     }
 
     @SuppressWarnings("deprecation")

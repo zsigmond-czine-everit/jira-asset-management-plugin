@@ -67,11 +67,6 @@ public class JiraAssetsRegisterAssetDetailsWebAction extends JiraWebActionSuppor
     private boolean error;
 
     /**
-     * Showing info page or not.
-     */
-    private boolean info;
-
-    /**
      * Showing edit page or not.
      */
     private boolean edit;
@@ -416,10 +411,6 @@ public class JiraAssetsRegisterAssetDetailsWebAction extends JiraWebActionSuppor
         return error;
     }
 
-    public boolean isInfo() {
-        return info;
-    }
-
     /**
      * Checking the array is have evaluable data.
      * 
@@ -496,8 +487,6 @@ public class JiraAssetsRegisterAssetDetailsWebAction extends JiraWebActionSuppor
         } else if (isValue(editSuccessArray) && editSuccessArray[0].equals("true")) {
             editSuccess = true;
         }
-        // String[] info = request.getParameterValues("info");
-        // String[] edit = request.getParameterValues("edit");
         String[] actionNames = request.getParameterValues("actionName");
         ButtonActionNames buttonActionName = null;
         if (isValue(actionNames)) {
@@ -508,21 +497,15 @@ public class JiraAssetsRegisterAssetDetailsWebAction extends JiraWebActionSuppor
         // this.info = true;
         // this.edit = false;
         if (isValue(actionNames) && (buttonActionName.getActionName() != null)
-                && buttonActionName.getActionName().equals(ButtonActionNames.VIEW_DETAILS.getActionName())) {
-            info = true;
-            edit = false;
-        } else if (isValue(actionNames) && (buttonActionName.getActionName() != null)
                 && buttonActionName.getActionName().equals(ButtonActionNames.EDIT_DETAILS.getActionName())) {
             edit = true;
-            info = false;
             // else if (isValue(edit) && edit[0].equals("true")) {
             // this.edit = true;
             // this.info = false;
         } else {
             edit = false;
-            info = false;
         }
-        if (edit || info) {
+        if (edit) {
             String[] issueKey = request.getParameterValues("issueKey");
             this.issueKey = issueKey[0];
             if (isValue(issueKey) && (issueKey[0] != null) && arPlugin.isValidIssueKey(issueKey[0])) {

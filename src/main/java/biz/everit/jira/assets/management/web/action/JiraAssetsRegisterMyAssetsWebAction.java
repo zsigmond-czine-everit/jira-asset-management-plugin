@@ -12,10 +12,12 @@ import biz.everit.jira.assets.management.service.api.AssetsRegistryService;
 import biz.everit.jira.assets.management.service.api.JiraPluginService;
 import biz.everit.jira.assets.management.service.api.dto.Asset;
 import biz.everit.jira.assets.management.service.api.dto.AssetDetail;
+import biz.everit.jira.assets.management.service.api.dto.AssetField;
 import biz.everit.jira.assets.management.service.api.dto.Field;
 import biz.everit.jira.assets.management.service.api.enums.ButtonActionNames;
 import biz.everit.jira.assets.management.service.api.enums.DeliveryInformationFields;
 import biz.everit.jira.assets.management.service.api.enums.WorkflowStatuses;
+import biz.everit.jira.assets.management.utils.AssetRegistryConstantsUtil;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.crowd.embedded.api.User;
@@ -192,11 +194,6 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
     private String actualIssueKey;
 
     /**
-     * Showing changing success message or not.
-     */
-    private boolean changeSuccess;
-
-    /**
      * Showing changing error message or not.
      */
     private boolean changeError;
@@ -246,7 +243,15 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
      */
     private String catchError;
 
+    /**
+     * The show not changed message.
+     */
     private boolean notChanged;
+
+    /**
+     * The all asset for the selected user.
+     */
+    private List<Asset> allAsset = new ArrayList<Asset>();
 
     /**
      * Simple constructor.
@@ -299,15 +304,13 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
             if ((selectedUserName != null) && arPlugin.isValidAssignee(selectedUserName)) {
                 Map<String, GenericValue> issueKeys = arPlugin
                         .findIssuesByStatusAndPreviousAssigned(WorkflowStatuses.INTERNAL_ASSIGNED, selectedUserName);
+
+                issueKeys.putAll(arPlugin
+                        .findIssuesByStatusAndAssignee(WorkflowStatuses.EXTERNAL_ASSIGNED, selectedUserName));
+                issueKeys.putAll(arPlugin
+                        .findIssuesByStatusAndPreviousAssigned(WorkflowStatuses.EXTERNAL_ASSIGNED, selectedUserName));
                 List<AssetDetail> assetDetails = arService.findAssetDetailsByIssueKeys(new ArrayList<String>(issueKeys
                         .keySet()));
-                result.addAll(arPlugin.convertIssueAndAssetDetailsToAsset(assetDetails, issueKeys));
-                issueKeys = arPlugin
-                        .findIssuesByStatusAndAssignee(WorkflowStatuses.EXTERNAL_ASSIGNED, selectedUserName);
-                assetDetails = arService.findAssetDetailsByIssueKeys(new ArrayList<String>(issueKeys.keySet()));
-                result.addAll(arPlugin.convertIssueAndAssetDetailsToAsset(assetDetails, issueKeys));
-                issueKeys = arPlugin
-                        .findIssuesByStatusAndPreviousAssigned(WorkflowStatuses.EXTERNAL_ASSIGNED, selectedUserName);
                 result.addAll(arPlugin.convertIssueAndAssetDetailsToAsset(assetDetails, issueKeys));
             }
         } catch (GenericEntityException e) {
@@ -367,8 +370,9 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
                             && arPlugin.changeIssueStatus(issueKeys[0], issueAssignees[0],
                                     validButtonActionName.getWorkflowActionName(),
                                     loggedUser.getName(), comments[0], fields)) {
-                        changeSuccess = true;
-                        setReturnUrl("/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?changeSuccess=true");
+                        setReturnUrl("/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?changeSuccess=true&actionName="
+                                + JiraAssetsRegisterMyAssetsWebAction.actionEdtiDetails().replace(' ', '+')
+                                + "&issueKey=" + issueKeys[0]);
                         return getRedirect(NONE);
                     } else {
                         notChanged = true;
@@ -392,6 +396,10 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
 
     public String getActualIssueKey() {
         return actualIssueKey;
+    }
+
+    public List<Asset> getAllAsset() {
+        return allAsset;
     }
 
     public JiraPluginService getArPlugin() {
@@ -446,10 +454,6 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
 
     public boolean isChangeError() {
         return changeError;
-    }
-
-    public boolean isChangeSuccess() {
-        return changeSuccess;
     }
 
     public boolean isNotChanged() {
@@ -507,6 +511,15 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
     }
 
     /**
+     * Returns all optional fields which is declared in the assets registry.
+     * 
+     * @return all optional fields. If no one return empty list.
+     */
+    public List<AssetField> optionalFields() {
+        return arService.findAllOptionalField();
+    }
+
+    /**
      * Finds and return the last exist assigned user in the issue.
      * 
      * @return the find exist user, if no one return <code>null</code>.
@@ -538,6 +551,30 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
             catchError = e.toString();
         }
         return result;
+    }
+
+    /**
+     * Returns all required fields which is declared in the assets registry.
+     * 
+     * @return all required fields. If no one return empty list.
+     */
+    public List<AssetField> requiredFields() {
+        requiredFieldsNotDeclared();
+        return arService.findAllRequiredField();
+    }
+
+    /**
+     * Checking the default fields. If not declared creating the fields.
+     */
+    private void requiredFieldsNotDeclared() {
+        AssetField deviceNameField = arService.findFieldByFieldName(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME);
+        AssetField assigneeField = arService.findFieldByFieldName(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE);
+        if (deviceNameField == null) {
+            arService.addRequiredField(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME);
+        }
+        if (assigneeField == null) {
+            arService.addRequiredField(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE);
+        }
     }
 
     public void setAsset(final Asset asset) {
@@ -572,12 +609,8 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
                 changeActionName = changeActionNames[0];
             }
 
-            String[] changeSuccesses = request.getParameterValues("changeSuccess");
             String[] changeErrors = request.getParameterValues("changeError");
             String[] notChangeds = request.getParameterValues("notChanged");
-            if (isValue(changeSuccesses) && changeSuccesses[0].equals("true")) {
-                changeSuccess = true;
-            }
             if (isValue(changeErrors) && changeErrors[0].equals("true")) {
                 changeError = true;
             }
@@ -591,6 +624,9 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
             } else {
                 backButtonValue = "/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa";
             }
+            allAsset.addAll(myAssets());
+            allAsset.addAll(deliveredAssets());
+            allAsset.addAll(receivedAssets());
         }
     }
 
