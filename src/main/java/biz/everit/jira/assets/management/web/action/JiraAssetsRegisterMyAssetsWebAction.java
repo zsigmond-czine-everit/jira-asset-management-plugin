@@ -16,6 +16,7 @@ import biz.everit.jira.assets.management.service.api.dto.AssetField;
 import biz.everit.jira.assets.management.service.api.dto.Field;
 import biz.everit.jira.assets.management.service.api.enums.ButtonActionNames;
 import biz.everit.jira.assets.management.service.api.enums.DeliveryInformationFields;
+import biz.everit.jira.assets.management.service.api.enums.WorkflowActions;
 import biz.everit.jira.assets.management.service.api.enums.WorkflowStatuses;
 import biz.everit.jira.assets.management.utils.AssetRegistryConstantsUtil;
 
@@ -194,6 +195,11 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
     private String actualIssueKey;
 
     /**
+     * Showing changing success message or not.
+     */
+    private boolean changeSuccess;
+
+    /**
      * Showing changing error message or not.
      */
     private boolean changeError;
@@ -370,9 +376,15 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
                             && arPlugin.changeIssueStatus(issueKeys[0], issueAssignees[0],
                                     validButtonActionName.getWorkflowActionName(),
                                     loggedUser.getName(), comments[0], fields)) {
-                        setReturnUrl("/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?changeSuccess=true&actionName="
-                                + JiraAssetsRegisterMyAssetsWebAction.actionEdtiDetails().replace(' ', '+')
-                                + "&issueKey=" + issueKeys[0]);
+                        changeSuccess = true;
+                        if (validButtonActionName.getWorkflowActionName().equals(
+                                WorkflowActions.INTERNAL_ASSIGNEE.getActionName())) {
+                            setReturnUrl("/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?changeSuccess=true");
+                        } else {
+                            setReturnUrl("/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?changeSuccess=true&actionName="
+                                    + JiraAssetsRegisterMyAssetsWebAction.actionEdtiDetails().replace(' ', '+')
+                                    + "&issueKey=" + issueKeys[0]);
+                        }
                         return getRedirect(NONE);
                     } else {
                         notChanged = true;
@@ -454,6 +466,10 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
 
     public boolean isChangeError() {
         return changeError;
+    }
+
+    public boolean isChangeSuccess() {
+        return changeSuccess;
     }
 
     public boolean isNotChanged() {
@@ -609,8 +625,12 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
                 changeActionName = changeActionNames[0];
             }
 
+            String[] changeSuccesses = request.getParameterValues("changeSuccess");
             String[] changeErrors = request.getParameterValues("changeError");
             String[] notChangeds = request.getParameterValues("notChanged");
+            if (isValue(changeSuccesses) && changeSuccesses[0].equals("true")) {
+                changeSuccess = true;
+            }
             if (isValue(changeErrors) && changeErrors[0].equals("true")) {
                 changeError = true;
             }
