@@ -313,8 +313,8 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
 
                 issueKeys.putAll(arPlugin
                         .findIssuesByStatusAndAssignee(WorkflowStatuses.EXTERNAL_ASSIGNED, selectedUserName));
-                issueKeys.putAll(arPlugin
-                        .findIssuesByStatusAndPreviousAssigned(WorkflowStatuses.EXTERNAL_ASSIGNED, selectedUserName));
+                // issueKeys.putAll(arPlugin
+                // .findIssuesByStatusAndPreviousAssigned(WorkflowStatuses.EXTERNAL_ASSIGNED, selectedUserName));
                 List<AssetDetail> assetDetails = arService.findAssetDetailsByIssueKeys(new ArrayList<String>(issueKeys
                         .keySet()));
                 result.addAll(arPlugin.convertIssueAndAssetDetailsToAsset(assetDetails, issueKeys));

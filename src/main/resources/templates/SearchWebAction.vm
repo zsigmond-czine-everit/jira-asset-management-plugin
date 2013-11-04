@@ -137,7 +137,7 @@
 										#elseif($asset.status.equals($statusInternalAssignedName) && $asset.loggedUserIsAssignee)
 												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionAcceptance&backPageUrl=$backButtonValue" class="ui-icon icon-accept" title="$i18n.getText("icon.accept")"></a>
 												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionRejection&backPageUrl=$backButtonValue" class="ui-icon icon-reject" title="$i18n.getText("icon.reject")"></a>
-										#elseif($asset.status.equals($statusExternalAssignedName) && $asset.loggedUserIsAssignee && $asset.loggedUserIsReporter) 
+										#elseif($asset.status.equals($statusExternalAssignedName) && $asset.loggedUserIsAssignee) 
 												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionReagain&backPageUrl=$backButtonValue" class="ui-icon icon-recover" title="$i18n.getText("icon.recover")"></a>
 										#elseif($asset.status.equals($statusInternalAssignedName) && ($asset.loggedUserIsReporter || $asset.loggedUserIsPreviousAssigned))
 												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionWithdrawal&backPageUrl=$backButtonValue" class="ui-icon icon-reject" title="$i18n.getText("icon.withdraw")"></a>
