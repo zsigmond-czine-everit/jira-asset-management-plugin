@@ -377,8 +377,9 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
                                     validButtonActionName.getWorkflowActionName(),
                                     loggedUser.getName(), comments[0], fields)) {
                         changeSuccess = true;
-                        if (validButtonActionName.getWorkflowActionName().equals(
-                                WorkflowActions.INTERNAL_ASSIGNEE.getActionName())) {
+                        String actualWorkflowActionName = validButtonActionName.getWorkflowActionName();
+                        if (actualWorkflowActionName.equals(WorkflowActions.INTERNAL_ASSIGNEE.getActionName())
+                                || actualWorkflowActionName.equals(WorkflowActions.REJECT.getActionName())) {
                             setReturnUrl("/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?changeSuccess=true");
                         } else {
                             setReturnUrl("/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?changeSuccess=true&actionName="
