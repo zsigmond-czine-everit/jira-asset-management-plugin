@@ -14,9 +14,8 @@ import biz.everit.jira.assets.management.service.api.dto.Asset;
 import biz.everit.jira.assets.management.service.api.dto.AssetDetail;
 import biz.everit.jira.assets.management.service.api.dto.AssetField;
 import biz.everit.jira.assets.management.service.api.dto.Field;
-import biz.everit.jira.assets.management.service.api.enums.ButtonActionNames;
 import biz.everit.jira.assets.management.service.api.enums.WorkflowStatuses;
-import biz.everit.jira.assets.management.utils.AssetRegistryConstantsUtil;
+import biz.everit.jira.assets.management.utils.ConstantHelper;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.crowd.embedded.api.User;
@@ -32,131 +31,7 @@ public class JiraAssetsRegisterSearchWebAction extends JiraWebActionSupport {
      */
     private static final long serialVersionUID = -5660598169299821943L;
 
-    /**
-     * The name of the acceptance button action.
-     * 
-     * @return the acceptance button action name.
-     */
-    public static String actionAcceptance() {
-        return ButtonActionNames.ACCEPTANCE.getActionName();
-    }
-
-    /**
-     * The name of the dispose asset button action.
-     * 
-     * @return the dispose asset culling button action name.
-     */
-    public static String actionDisposeAsset() {
-        return ButtonActionNames.DISPOSE_ASSET.getActionName();
-    }
-
-    /**
-     * The name of the edit details button action.
-     * 
-     * @return the edit details button action name.
-     */
-    public static String actionEdtiDetails() {
-        return ButtonActionNames.EDIT_DETAILS.getActionName();
-    }
-
-    /**
-     * The name of the external handover button action.
-     * 
-     * @return the external handover button action name.
-     */
-    public static String actionExternalHandover() {
-        return ButtonActionNames.EXTERNAL_HANDOVER.getActionName();
-    }
-
-    /**
-     * The name of the internal handover button action.
-     * 
-     * @return the internal handover button action name.
-     */
-    public static String actionInternalHandover() {
-        return ButtonActionNames.INTERNAL_HANDOVER.getActionName();
-    }
-
-    /**
-     * The name of the reagain button action.
-     * 
-     * @return the reagain button action name.
-     */
-    public static String actionReagain() {
-        return ButtonActionNames.REAGAIN.getActionName();
-    }
-
-    /**
-     * The name of the rejection button action.
-     * 
-     * @return the rejection button action name.
-     */
-    public static String actionRejection() {
-        return ButtonActionNames.REJECTION.getActionName();
-    }
-
-    /**
-     * The name of the view details button action.
-     * 
-     * @return the view details button action name.
-     */
-    public static String actionViewDetails() {
-        return ButtonActionNames.VIEW_DETAILS.getActionName();
-    }
-
-    /**
-     * The name of the withdrawal button action.
-     * 
-     * @return the withdrawal button action name.
-     */
-    public static String actionWithdrawal() {
-        return ButtonActionNames.WITHDRAWAL.getActionName();
-    }
-
-    /**
-     * The usage assignee field name.
-     * 
-     * @return the name of the assignee field.
-     */
-    public static String getFIELD_NAME_ASSIGNEE() {
-        return AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE;
-    }
-
-    /**
-     * The usage workflow closed status name.
-     * 
-     * @return the name of the closed status.
-     */
-    public static String getStatusClosedName() {
-        return AssetRegistryConstantsUtil.STATUS_CLOSED_NAME;
-    }
-
-    /**
-     * The usage workflow external assignee status name.
-     * 
-     * @return the name of the external assignee status.
-     */
-    public static String getStatusExternalAssignedName() {
-        return AssetRegistryConstantsUtil.STATUS_EXTERNAL_ASSIGNED_NAME;
-    }
-
-    /**
-     * The usage workflow internal assignee status name.
-     * 
-     * @return the name of the internal assignee status.
-     */
-    public static String getStatusInternalAssignedName() {
-        return AssetRegistryConstantsUtil.STATUS_INTERNAL_ASSIGNED_NAME;
-    }
-
-    /**
-     * The usage workflow open status name.
-     * 
-     * @return the name of the open status.
-     */
-    public static String getStatusOpenName() {
-        return AssetRegistryConstantsUtil.STATUS_OPEN_NAME;
-    }
+    private ConstantHelper helper = ConstantHelper.INSTANCE;
 
     /**
      * The {@link AssetsRegistryService} instance.
@@ -202,6 +77,7 @@ public class JiraAssetsRegisterSearchWebAction extends JiraWebActionSupport {
      * The value (links), the back button.
      */
     private String backButtonValue;
+
     /**
      * The auxiliary variable when rendering the filled optional fields.
      */
@@ -287,9 +163,9 @@ public class JiraAssetsRegisterSearchWebAction extends JiraWebActionSupport {
             for (AssetField field : requiredFields) {
                 String[] fieldValue = request.getParameterValues(field.getFieldName());
                 if (isValue(fieldValue)) {
-                    if (field.getFieldName().equals(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE)) {
+                    if (field.getFieldName().equals(ConstantHelper.FIELD_NAME_ASSIGNEE)) {
                         issueKeys = arPlugin.findIssueKeysByAssigneName(fieldValue[0]);
-                        assigneeField = new Field(JiraAssetsRegisterSearchWebAction.getFIELD_NAME_ASSIGNEE(),
+                        assigneeField = new Field(ConstantHelper.getFieldNameAssignee(),
                                 fieldValue[0]);
                     } else {
                         searchFields.add(new Field(field.getFieldName(), fieldValue[0]));
@@ -407,6 +283,10 @@ public class JiraAssetsRegisterSearchWebAction extends JiraWebActionSupport {
         return filledFields;
     }
 
+    public final ConstantHelper getHelper() {
+        return helper;
+    }
+
     public String getIdNumber() {
         int tmp = idNumber;
         idNumber += 1;
@@ -482,13 +362,13 @@ public class JiraAssetsRegisterSearchWebAction extends JiraWebActionSupport {
      * Checking the default fields. If not declared creating the fields.
      */
     private void requiredFieldsNotDeclared() {
-        AssetField deviceNameField = arService.findFieldByFieldName(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME);
-        AssetField assigneeField = arService.findFieldByFieldName(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE);
+        AssetField deviceNameField = arService.findFieldByFieldName(ConstantHelper.FIELD_NAME_DEVICE_NAME);
+        AssetField assigneeField = arService.findFieldByFieldName(ConstantHelper.FIELD_NAME_ASSIGNEE);
         if (deviceNameField == null) {
-            arService.addRequiredField(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME);
+            arService.addRequiredField(ConstantHelper.FIELD_NAME_DEVICE_NAME);
         }
         if (assigneeField == null) {
-            arService.addRequiredField(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE);
+            arService.addRequiredField(ConstantHelper.FIELD_NAME_ASSIGNEE);
         }
     }
 

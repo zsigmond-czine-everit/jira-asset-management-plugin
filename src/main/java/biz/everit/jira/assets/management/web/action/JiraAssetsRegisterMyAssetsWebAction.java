@@ -18,8 +18,7 @@ import biz.everit.jira.assets.management.service.api.enums.ButtonActionNames;
 import biz.everit.jira.assets.management.service.api.enums.DeliveryInformationFields;
 import biz.everit.jira.assets.management.service.api.enums.WorkflowActions;
 import biz.everit.jira.assets.management.service.api.enums.WorkflowStatuses;
-import biz.everit.jira.assets.management.utils.AssetRegistryConstantsUtil;
-
+import biz.everit.jira.assets.management.utils.ConstantHelper;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
@@ -34,140 +33,7 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
      */
     private static final long serialVersionUID = 2631028649881573072L;
 
-    /**
-     * The name of the acceptance button action.
-     * 
-     * @return the acceptance button action name.
-     */
-    public static String actionAcceptance() {
-        return ButtonActionNames.ACCEPTANCE.getActionName();
-    }
-
-    /**
-     * The name of the dispose asset button action.
-     * 
-     * @return the dispose asset culling button action name.
-     */
-    public static String actionDisposeAsset() {
-        return ButtonActionNames.DISPOSE_ASSET.getActionName();
-    }
-
-    /**
-     * The name of the edit details button action.
-     * 
-     * @return the edit details button action name.
-     */
-    public static String actionEdtiDetails() {
-        return ButtonActionNames.EDIT_DETAILS.getActionName();
-    }
-
-    /**
-     * The name of the external handover button action.
-     * 
-     * @return the external handover button action name.
-     */
-    public static String actionExternalHandover() {
-        return ButtonActionNames.EXTERNAL_HANDOVER.getActionName();
-    }
-
-    /**
-     * The name of the internal handover button action.
-     * 
-     * @return the internal handover button action name.
-     */
-    public static String actionInternalHandover() {
-        return ButtonActionNames.INTERNAL_HANDOVER.getActionName();
-    }
-
-    /**
-     * The name of the reagain button action.
-     * 
-     * @return the reagain button action name.
-     */
-    public static String actionReagain() {
-        return ButtonActionNames.REAGAIN.getActionName();
-    }
-
-    /**
-     * The name of the rejection button action.
-     * 
-     * @return the rejection button action name.
-     */
-    public static String actionRejection() {
-        return ButtonActionNames.REJECTION.getActionName();
-    }
-
-    /**
-     * The name of the view details button action.
-     * 
-     * @return the view details button action name.
-     */
-    public static String actionViewDetails() {
-        return ButtonActionNames.VIEW_DETAILS.getActionName();
-    }
-
-    /**
-     * The name of the withdrawal button action.
-     * 
-     * @return the withdrawal button action name.
-     */
-    public static String actionWithdrawal() {
-        return ButtonActionNames.WITHDRAWAL.getActionName();
-    }
-
-    /**
-     * The name of the address field.
-     * 
-     * @return the address field name.
-     */
-    public static String fieldAddress() {
-        return DeliveryInformationFields.ADDRESS.getFieldName();
-    }
-
-    /**
-     * The name of the company field.
-     * 
-     * @return the company field name.
-     */
-    public static String fieldCompany() {
-        return DeliveryInformationFields.COMPANY.getFieldName();
-    }
-
-    /**
-     * The name of the recipient name field.
-     * 
-     * @return the recipient name field name.
-     */
-    public static String fieldRecipientName() {
-        return DeliveryInformationFields.RECIPIENT_NAME.getFieldName();
-    }
-
-    /**
-     * The name of the tax number field.
-     * 
-     * @return the tax number field name.
-     */
-    public static String fieldTaxNumber() {
-        return DeliveryInformationFields.TAX_NUMBER.getFieldName();
-    }
-
-    /**
-     * The usage workflow external assignee status name.
-     * 
-     * @return the external assignee status name.
-     */
-    public static String statusExternalAssignee() {
-        return WorkflowStatuses.EXTERNAL_ASSIGNED.getStatusName();
-    }
-
-    /**
-     * The usage workflow internal assignee status name.
-     * 
-     * @return the internal assignee status name.
-     */
-    public static String statusInternalAssignee() {
-        return WorkflowStatuses.INTERNAL_ASSIGNED.getStatusName();
-    }
+    private ConstantHelper helper = ConstantHelper.INSTANCE;
 
     /**
      * The value (links), the back button.
@@ -325,6 +191,9 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
         return result;
     }
 
+    /**
+     * {@inheritDoc}. <b>Must be call {@link MessageHandler#newRequest()} method the first.</b>
+     */
     @Override
     public String doDefault() throws Exception {
         boolean isUserLogged = arPlugin.isLoggedUser();
@@ -332,6 +201,7 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
             setReturnUrl("/secure/Dashboard.jspa");
             return getRedirect(NONE);
         }
+
         setDefaultVariable();
         if (isValue(changes) && changes[0].equals("true")) {
             if (isValue(issueKeys) && (arPlugin.isValidIssueKey(issueKeys[0]) && isValue(changeActionNames))) {
@@ -383,7 +253,7 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
                             setReturnUrl("/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?changeSuccess=true");
                         } else {
                             setReturnUrl("/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?changeSuccess=true&actionName="
-                                    + JiraAssetsRegisterMyAssetsWebAction.actionEdtiDetails().replace(' ', '+')
+                                    + ConstantHelper.getActionEdtiDetails().replace(' ', '+')
                                     + "&issueKey=" + issueKeys[0]);
                         }
                         return getRedirect(NONE);
@@ -441,6 +311,10 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
 
     public String getChangeActionName() {
         return changeActionName;
+    }
+
+    public final ConstantHelper getHelper() {
+        return helper;
     }
 
     public String getSelectedUserName() {
@@ -584,13 +458,13 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
      * Checking the default fields. If not declared creating the fields.
      */
     private void requiredFieldsNotDeclared() {
-        AssetField deviceNameField = arService.findFieldByFieldName(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME);
-        AssetField assigneeField = arService.findFieldByFieldName(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE);
+        AssetField deviceNameField = arService.findFieldByFieldName(ConstantHelper.FIELD_NAME_DEVICE_NAME);
+        AssetField assigneeField = arService.findFieldByFieldName(ConstantHelper.FIELD_NAME_ASSIGNEE);
         if (deviceNameField == null) {
-            arService.addRequiredField(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME);
+            arService.addRequiredField(ConstantHelper.FIELD_NAME_DEVICE_NAME);
         }
         if (assigneeField == null) {
-            arService.addRequiredField(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE);
+            arService.addRequiredField(ConstantHelper.FIELD_NAME_ASSIGNEE);
         }
     }
 

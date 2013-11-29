@@ -22,7 +22,7 @@ import biz.everit.jira.assets.management.service.api.dto.Asset;
 import biz.everit.jira.assets.management.service.api.dto.AssetDetail;
 import biz.everit.jira.assets.management.service.api.dto.Field;
 import biz.everit.jira.assets.management.service.api.enums.WorkflowStatuses;
-import biz.everit.jira.assets.management.utils.AssetRegistryConstantsUtil;
+import biz.everit.jira.assets.management.utils.ConstantHelper;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.core.ofbiz.util.EntityUtils;
@@ -136,56 +136,56 @@ public class JiraPluginServiceImpl implements JiraPluginService {
         /*
          * Create issue type if not exist.
          */
-        IssueType existIssueType = existIssueType(AssetRegistryConstantsUtil.ISSUE_TYPE_NAME);
+        IssueType existIssueType = existIssueType(ConstantHelper.ISSUE_TYPE_NAME);
         if (existIssueType == null) {
             ComponentAccessor.getConstantsManager()
-                    .createIssueType(AssetRegistryConstantsUtil.ISSUE_TYPE_NAME, null, null,
-                            AssetRegistryConstantsUtil.ISSUE_TYPE_DESCRIPTION,
-                            AssetRegistryConstantsUtil.ISSUE_TYPE_IMAGE_PATH);
-            existIssueType = existIssueType(AssetRegistryConstantsUtil.ISSUE_TYPE_NAME);
+                    .createIssueType(ConstantHelper.ISSUE_TYPE_NAME, null, null,
+                            ConstantHelper.ISSUE_TYPE_DESCRIPTION,
+                            ConstantHelper.ISSUE_TYPE_IMAGE_PATH);
+            existIssueType = existIssueType(ConstantHelper.ISSUE_TYPE_NAME);
         }
 
         /*
          * Create issue type scheme if not exist.
          */
-        FieldConfigScheme existIssueTypeSceme = existIssueTypeSceme(AssetRegistryConstantsUtil.ISSUE_TYPE_SCHEME_NAME);
+        FieldConfigScheme existIssueTypeSceme = existIssueTypeSceme(ConstantHelper.ISSUE_TYPE_SCHEME_NAME);
         if (existIssueTypeSceme == null) {
             List<String> options = new ArrayList<String>();
             Object assetIssueTypeId = existIssueType.getGenericValue().getAllFields().get("id");
             options.add(assetIssueTypeId.toString());
             existIssueTypeSceme = ComponentAccessor.getIssueTypeSchemeManager()
-                    .create(AssetRegistryConstantsUtil.ISSUE_TYPE_SCHEME_NAME,
-                            AssetRegistryConstantsUtil.ISSUE_TYPE_SCHEME_DESCRIPTION, options);
+                    .create(ConstantHelper.ISSUE_TYPE_SCHEME_NAME,
+                            ConstantHelper.ISSUE_TYPE_SCHEME_DESCRIPTION, options);
         }
 
         /*
          * Create external assigned status if not exits.
          */
-        Status existStatusExternalAssigned = existStatus(AssetRegistryConstantsUtil.STATUS_EXTERNAL_ASSIGNED_NAME);
+        Status existStatusExternalAssigned = existStatus(ConstantHelper.getStatusExternalAssignedName());
         if (existStatusExternalAssigned == null) {
-            existStatusExternalAssigned = createStatus(AssetRegistryConstantsUtil.STATUS_EXTERNAL_ASSIGNED_NAME,
-                    AssetRegistryConstantsUtil.STATUS_EXTERNAL_ASSIGNED_DESCRIPTION);
+            existStatusExternalAssigned = createStatus(ConstantHelper.getStatusExternalAssignedName(),
+                    ConstantHelper.getStatusExternalAssignedDescription());
         }
         /*
          * Create internal assigned status if not exits.
          */
-        Status existStatusInternalAssigned = existStatus(AssetRegistryConstantsUtil.STATUS_INTERNAL_ASSIGNED_NAME);
+        Status existStatusInternalAssigned = existStatus(ConstantHelper.getStatusInternalAssignedName());
         if (existStatusInternalAssigned == null) {
-            existStatusInternalAssigned = createStatus(AssetRegistryConstantsUtil.STATUS_INTERNAL_ASSIGNED_NAME,
-                    AssetRegistryConstantsUtil.STATUS_INTERNAL_ASSIGNED_DESCRIPTION);
+            existStatusInternalAssigned = createStatus(ConstantHelper.getStatusInternalAssignedName(),
+                    ConstantHelper.getStatusInternalAssignedDescription());
         }
 
         /*
          * Create workflow if not exist.
          */
-        JiraWorkflow existWorkflow = existWorkflow(AssetRegistryConstantsUtil.WORKFLOW_NAME);
+        JiraWorkflow existWorkflow = existWorkflow(ConstantHelper.WORKFLOW_NAME);
         if (existWorkflow == null) {
             /*
              * Import the workflow.
              */
             BundleContext bc = FrameworkUtil.getBundle(JiraPluginServiceImpl.class).getBundleContext();
             Bundle bundle = bc.getBundle();
-            URL resource = bundle.getResource(AssetRegistryConstantsUtil.WORKFLOW_RESOURCE_PATH);
+            URL resource = bundle.getResource(ConstantHelper.WORKFLOW_RESOURCE_PATH);
             BufferedReader br = new BufferedReader(new InputStreamReader(resource.openConnection().getInputStream()));
             String xml = "";
             while (br.ready()) {
@@ -205,44 +205,44 @@ public class JiraPluginServiceImpl implements JiraPluginService {
                     new ByteArrayInputStream(xml.getBytes("UTF-8")),
                     true);
             ConfigurableJiraWorkflow newWorkflow = new ConfigurableJiraWorkflow(
-                    AssetRegistryConstantsUtil.WORKFLOW_NAME,
+                    ConstantHelper.WORKFLOW_NAME,
                     workflowDescriptor,
                     workflowManager);
-            newWorkflow.setDescription(AssetRegistryConstantsUtil.WORKFLOW_DESCRIPTION);
+            newWorkflow.setDescription(ConstantHelper.WORKFLOW_DESCRIPTION);
             workflowManager.createWorkflow(user, newWorkflow);
-            existWorkflow = existWorkflow(AssetRegistryConstantsUtil.WORKFLOW_NAME);
+            existWorkflow = existWorkflow(ConstantHelper.WORKFLOW_NAME);
         }
 
         /*
          * Create workflow scheme and connect workflow, if not exist the workflow scheme.
          */
-        Scheme existWorkflowScheme = existWorkflowScheme(AssetRegistryConstantsUtil.WORKFLOW_SCHEME_NAME);
+        Scheme existWorkflowScheme = existWorkflowScheme(ConstantHelper.WORKFLOW_SCHEME_NAME);
         if (existWorkflowScheme == null) {
             GenericValue createScheme = ComponentAccessor.getWorkflowSchemeManager().createScheme(
-                    AssetRegistryConstantsUtil.WORKFLOW_SCHEME_NAME,
-                    AssetRegistryConstantsUtil.WORKFLOW_SCHEME_DESCRIPTION);
+                    ConstantHelper.WORKFLOW_SCHEME_NAME,
+                    ConstantHelper.WORKFLOW_SCHEME_DESCRIPTION);
             ComponentAccessor.getWorkflowSchemeManager().addWorkflowToScheme(createScheme,
-                    AssetRegistryConstantsUtil.WORKFLOW_NAME,
+                    ConstantHelper.WORKFLOW_NAME,
                     existIssueType.getId());
-            existWorkflowScheme = existWorkflowScheme(AssetRegistryConstantsUtil.WORKFLOW_SCHEME_NAME);
+            existWorkflowScheme = existWorkflowScheme(ConstantHelper.WORKFLOW_SCHEME_NAME);
         }
 
         /*
          * Create project if not exist. Add issue type scheme, workflow, screen scheme to the project, only if not exist
          * the project.
          */
-        Project existProject = existProject(AssetRegistryConstantsUtil.PROJECT_NAME,
-                AssetRegistryConstantsUtil.PROJECT_KEY);
+        Project existProject = existProject(ConstantHelper.PROJECT_NAME,
+                ConstantHelper.PROJECT_KEY);
         if (existProject == null) {
-            existProject = ComponentAccessor.getProjectManager().createProject(AssetRegistryConstantsUtil.PROJECT_NAME,
-                    AssetRegistryConstantsUtil.PROJECT_KEY, AssetRegistryConstantsUtil.PROJECT_DESCRIPTION,
+            existProject = ComponentAccessor.getProjectManager().createProject(ConstantHelper.PROJECT_NAME,
+                    ConstantHelper.PROJECT_KEY, ConstantHelper.PROJECT_DESCRIPTION,
                     user.getName(), "", AssigneeTypes.PROJECT_LEAD);
             IssueTypeScreenSchemeManager component = ComponentAccessor.getComponent(IssueTypeScreenSchemeManager.class);
             IssueTypeScreenScheme defaultScheme = component.getDefaultScheme();
             component.addSchemeAssociation(existProject.getGenericValue(), defaultScheme);
             ComponentAccessor.getPermissionSchemeManager().addDefaultSchemeToProject(existProject.getGenericValue());
             GenericValue shcemeGeneric = ComponentAccessor.getWorkflowSchemeManager().getScheme(
-                    AssetRegistryConstantsUtil.WORKFLOW_SCHEME_NAME);
+                    ConstantHelper.WORKFLOW_SCHEME_NAME);
             ComponentAccessor.getWorkflowSchemeManager().addSchemeToProject(existProject.getGenericValue(),
                     shcemeGeneric);
             FieldConfigSchemeManager component2 = ComponentAccessor.getComponent(FieldConfigSchemeManager.class);
@@ -471,7 +471,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
         }
         Status result = null;
         String sequence = null;
-        String iconurl = AssetRegistryConstantsUtil.STATUS_IMAGE_PATH;
+        String iconurl = ConstantHelper.STATUS_IMAGE_PATH;
         Map<String, Object> fields = MapBuilder.<String, Object> newBuilder()
                 .add("id", EntityUtils.getNextStringId(ConstantsManager.STATUS_CONSTANT_TYPE))
                 .add("name", statusName)
@@ -709,7 +709,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
         List<String> issueKeys = new ArrayList<String>();
         IssueManager issueManager = ComponentAccessor.getIssueManager();
         Long projectId = ComponentAccessor.getProjectManager()
-                .getProjectObjByKey(AssetRegistryConstantsUtil.PROJECT_KEY).getId();
+                .getProjectObjByKey(ConstantHelper.PROJECT_KEY).getId();
         if (projectId != null) {
             Collection<Long> issueIdsForProject = issueManager.getIssueIdsForProject(projectId);
             for (Long issueId : issueIdsForProject) {
@@ -733,7 +733,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
         List<String> issueKeys = new ArrayList<String>();
         IssueManager issueManager = ComponentAccessor.getIssueManager();
         Long projectId = ComponentAccessor.getProjectManager()
-                .getProjectObjByKey(AssetRegistryConstantsUtil.PROJECT_KEY).getId();
+                .getProjectObjByKey(ConstantHelper.PROJECT_KEY).getId();
         if (projectId != null) {
             CommentManager commentManager = ComponentAccessor.getCommentManager();
             Collection<Long> issueIdsForProject = issueManager.getIssueIdsForProject(projectId);
@@ -758,7 +758,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
         List<String> issueKeys = new ArrayList<String>();
         IssueManager issueManager = ComponentAccessor.getIssueManager();
         Long projectId = ComponentAccessor.getProjectManager()
-                .getProjectObjByKey(AssetRegistryConstantsUtil.PROJECT_KEY).getId();
+                .getProjectObjByKey(ConstantHelper.PROJECT_KEY).getId();
         if (projectId != null) {
             Collection<Long> issueIdsForProject = issueManager.getIssueIdsForProject(projectId);
             for (Long issueId : issueIdsForProject) {
@@ -781,7 +781,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
         List<GenericValue> workflowStatuses = workflowStatusesInProject();
         GenericValue statusObject = null;
         for (GenericValue ws : workflowStatuses) {
-            if (ws.getString("name").equals(status.toString())) {
+            if (ws.getString("name").equals(status.getStatusName())) {
                 statusObject = ws;
                 break;
             }
@@ -812,14 +812,14 @@ public class JiraPluginServiceImpl implements JiraPluginService {
         List<GenericValue> workflowStatuses = workflowStatusesInProject();
         GenericValue statusObject = null;
         for (GenericValue ws : workflowStatuses) {
-            if (ws.getString("name").equals(status.toString())) {
+            if (ws.getString("name").equals(status.getStatusName())) {
                 statusObject = ws;
                 break;
             }
         }
         if (statusObject != null) {
             Collection<Long> issueIdsForProject = ComponentAccessor.getIssueManager().getIssueIdsForProject(
-                    ComponentAccessor.getProjectManager().getProjectObjByKey(AssetRegistryConstantsUtil.PROJECT_KEY)
+                    ComponentAccessor.getProjectManager().getProjectObjByKey(ConstantHelper.PROJECT_KEY)
                             .getId());
             for (Long id : issueIdsForProject) {
                 GenericValue gv = ComponentAccessor.getIssueManager().getIssue(id);
@@ -848,7 +848,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
         List<GenericValue> workflowStatuses = workflowStatusesInProject();
         GenericValue statusObject = null;
         for (GenericValue ws : workflowStatuses) {
-            if (ws.getString("name").equals(status.toString())) {
+            if (ws.getString("name").equals(status.getStatusName())) {
                 statusObject = ws;
                 break;
             }
@@ -889,7 +889,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
         Collection<IssueType> regularIssueTypeObjects = ComponentManager.getInstance().getConstantsManager()
                 .getRegularIssueTypeObjects();
         for (IssueType it : regularIssueTypeObjects) {
-            if (it.getName().equals(AssetRegistryConstantsUtil.ISSUE_TYPE_NAME)) {
+            if (it.getName().equals(ConstantHelper.ISSUE_TYPE_NAME)) {
                 result = it;
                 break;
             }
@@ -911,7 +911,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
      */
     public Project getProject() {
         return ComponentManager.getInstance().getProjectManager()
-                .getProjectObjByKey(AssetRegistryConstantsUtil.PROJECT_KEY);
+                .getProjectObjByKey(ConstantHelper.PROJECT_KEY);
     }
 
     /**
@@ -962,7 +962,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
             throw new IllegalArgumentException("The parameter(s) not be null!");
         }
         Collection<ActionDescriptor> allActions = ComponentAccessor.getWorkflowManager()
-                .getWorkflow(AssetRegistryConstantsUtil.WORKFLOW_NAME)
+                .getWorkflow(ConstantHelper.WORKFLOW_NAME)
                 .getAllActions();
         for (ActionDescriptor ad : allActions) {
             if (ad.getName().equals(actionName)) {
@@ -1013,7 +1013,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
                 permissionId,
                 user);
         Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(
-                AssetRegistryConstantsUtil.PROJECT_KEY);
+                ConstantHelper.PROJECT_KEY);
         if (projects.contains(project)) {
             return true;
         }
@@ -1051,7 +1051,7 @@ public class JiraPluginServiceImpl implements JiraPluginService {
         Collection<GenericValue> statuses = ComponentManager.getInstance().getConstantsManager().getStatuses();
         for (GenericValue s : statuses) {
             for (WorkflowStatuses ws : WorkflowStatuses.values()) {
-                if (s.getString("name").equals(ws.toString())) {
+                if (s.getString("name").equals(ws.getStatusName())) {
                     workflowStatus.add(s);
                 }
             }

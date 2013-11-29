@@ -44,8 +44,4 @@ public enum WorkflowStatuses {
         return statusName;
     }
 
-    @Override
-    public String toString() {
-        return statusName;
-    }
 }

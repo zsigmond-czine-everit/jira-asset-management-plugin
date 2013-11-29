@@ -6,7 +6,7 @@ import biz.everit.jira.assets.management.service.AssetsRegistryServiceImpl;
 import biz.everit.jira.assets.management.service.api.AssetsRegistryService;
 import biz.everit.jira.assets.management.service.api.JiraPluginService;
 import biz.everit.jira.assets.management.service.api.dto.AssetField;
-import biz.everit.jira.assets.management.utils.AssetRegistryConstantsUtil;
+import biz.everit.jira.assets.management.utils.ConstantHelper;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.crowd.embedded.api.User;
@@ -22,37 +22,22 @@ public class JiraAssetsRegisterFieldManagementWebAction extends JiraWebActionSup
      */
     private static final long serialVersionUID = -3171355480317954327L;
 
-    /**
-     * The usage assignee field name.
-     * 
-     * @return the name of the assignee field.
-     */
-    public static String getFIELD_NAME_ASSIGNEE() {
-        return AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE;
-    }
-
-    /**
-     * The usage device name field name.
-     * 
-     * @return the name of the device name field.
-     */
-    public static String getFIELD_NAME_DEVICE_NAME() {
-        return AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME;
-    }
+    private ConstantHelper helper = ConstantHelper.INSTANCE;
 
     /**
      * The value (links), the back button.
      */
     private String backButtonValue;
+
     /**
      * The {@link AssetsRegistryService} instance.
      */
     private AssetsRegistryService arService;
-
     /**
      * The {@link JiraPluginService} instance.
      */
     private JiraPluginService arPlugin;
+
     /**
      * The auxiliary variable when listing the fields on the site.
      */
@@ -69,7 +54,6 @@ public class JiraAssetsRegisterFieldManagementWebAction extends JiraWebActionSup
      * Showing a activation error message or not.
      */
     private boolean activeError;
-
     /**
      * Showing a creation success message or not.
      */
@@ -268,6 +252,10 @@ public class JiraAssetsRegisterFieldManagementWebAction extends JiraWebActionSup
         return field;
     }
 
+    public final ConstantHelper getHelper() {
+        return helper;
+    }
+
     public boolean isActiveError() {
         return activeError;
     }
@@ -373,13 +361,13 @@ public class JiraAssetsRegisterFieldManagementWebAction extends JiraWebActionSup
      * Checking the default fields. If not declared creating the fields.
      */
     private void requiredFieldsNotDeclared() {
-        AssetField deviceNameField = arService.findFieldByFieldName(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME);
-        AssetField assigneeField = arService.findFieldByFieldName(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE);
+        AssetField deviceNameField = arService.findFieldByFieldName(ConstantHelper.FIELD_NAME_DEVICE_NAME);
+        AssetField assigneeField = arService.findFieldByFieldName(ConstantHelper.FIELD_NAME_ASSIGNEE);
         if (deviceNameField == null) {
-            arService.addRequiredField(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME);
+            arService.addRequiredField(ConstantHelper.FIELD_NAME_DEVICE_NAME);
         }
         if (assigneeField == null) {
-            arService.addRequiredField(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE);
+            arService.addRequiredField(ConstantHelper.FIELD_NAME_ASSIGNEE);
         }
     }
 

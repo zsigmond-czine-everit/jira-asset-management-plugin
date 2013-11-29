@@ -6,9 +6,9 @@
 									<tr>
 										<td width="125px">$i18n.getText("device.label.assignee")</td>
 										<td><select name="assignee" id="assignee">
-												#if($changeActionName.equals($actionAcceptance) || $changeActionName.equals($actionExternalHandover) || $changeActionName.equals($actionDisposeAsset) || $changeActionName.equals($actionReagain))
+												#if($changeActionName.equals($helper.actionAcceptance) || $changeActionName.equals($helper.actionExternalHandover) || $changeActionName.equals($helper.actionDisposeAsset) || $changeActionName.equals($helper.actionReagain))
 													<option value="$actualAssignedUser.name">$actualAssignedUser.displayName</option>
-												#elseif($changeActionName.equals($actionRejection) || $changeActionName.equals($actionWithdrawal))
+												#elseif($changeActionName.equals($helper.actionRejection) || $changeActionName.equals($helper.actionWithdrawal))
 													<option value="$previousAssignedUser.name">$previousAssignedUser.displayName</option>
 												#else
 													#foreach ($assignee in $assignees)
@@ -33,7 +33,7 @@
 						<br/>
 					</div>
 					<br/>
-					#if($changeActionName.equals($actionExternalHandover))
+					#if($changeActionName.equals($helper.actionExternalHandover))
 					<div class="gadget-container">
 						<h3 id="gadget-10001-title" class="dashboard-item-title">$i18n.getText("my.assets.title.change.delivery.information")</h3>
 						<div class="dashboard-item-content">
@@ -41,19 +41,19 @@
 								<tbody>
 									<tr>
 										<td>$i18n.getText("my.assets.change.field.recipient.name")</td>
-										<td><input type="text" name="$fieldRecipientName" /></td>
+										<td><input type="text" name="$helper.fieldRecipientName" /></td>
 									</tr>
 									<tr>
 										<td>$i18n.getText("my.assets.change.field.company")</td>
-										<td><input type="text" name="$fieldCompany" /></td>
+										<td><input type="text" name="$helper.fieldCompany" /></td>
 									</tr>
 									<tr>
 										<td>$i18n.getText("my.assets.change.field.address")</td>
-										<td><input type="text" name="$fieldAddress" /></td>
+										<td><input type="text" name="$helper.fieldAddress" /></td>
 									</tr>
 									<tr>
 										<td>$i18n.getText("my.assets.change.field.tax.number")</td>
-										<td><input type="text" name="$fieldTaxNumber" /></td>
+										<td><input type="text" name="$helper.fieldTaxNumber" /></td>
 									</tr>
 								</tbody>
 							</table>

@@ -17,7 +17,7 @@ import biz.everit.jira.assets.management.service.api.dto.AssetDetail;
 import biz.everit.jira.assets.management.service.api.dto.AssetField;
 import biz.everit.jira.assets.management.service.api.dto.Field;
 import biz.everit.jira.assets.management.service.api.enums.ButtonActionNames;
-import biz.everit.jira.assets.management.utils.AssetRegistryConstantsUtil;
+import biz.everit.jira.assets.management.utils.ConstantHelper;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.crowd.embedded.api.User;
@@ -34,23 +34,7 @@ public class JiraAssetsRegisterAssetDetailsWebAction extends JiraWebActionSuppor
      */
     private static final long serialVersionUID = -8704123803346242094L;
 
-    /**
-     * The usage assignee field name.
-     * 
-     * @return the name of the assignee field.
-     */
-    public static String getFIELD_NAME_ASSIGNEE() {
-        return AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE;
-    }
-
-    /**
-     * The usage device name field name.
-     * 
-     * @return the name of the device name field.
-     */
-    public static String getFIELD_NAME_DEVICE_NAME() {
-        return AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME;
-    }
+    private ConstantHelper helper = ConstantHelper.INSTANCE;
 
     /**
      * The {@link AssetsRegistryService} instance.
@@ -210,9 +194,9 @@ public class JiraAssetsRegisterAssetDetailsWebAction extends JiraWebActionSuppor
 
             if (!error) {
                 try {
-                    if (fieldsValues.get(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME) != null) {
+                    if (fieldsValues.get(ConstantHelper.FIELD_NAME_DEVICE_NAME) != null) {
                         String issueKey = arPlugin.createIssue(
-                                fieldsValues.get(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME), "");
+                                fieldsValues.get(ConstantHelper.FIELD_NAME_DEVICE_NAME), "");
                         if (issueKey != null) {
                             AssetDetail assetDetails = new AssetDetail(issueKey, fieldsValues);
                             if (!arService.addAsset(assetDetails, issueKey)) {
@@ -278,7 +262,7 @@ public class JiraAssetsRegisterAssetDetailsWebAction extends JiraWebActionSuppor
                         arPlugin.changeIssueSummary(
                                 issueKeys[0],
                                 assetDetails.getFields().get(
-                                        JiraAssetsRegisterAssetDetailsWebAction.getFIELD_NAME_DEVICE_NAME()));
+                                        ConstantHelper.getFieldNameDeviceName()));
                         editSuccess = true;
                     }
                 }
@@ -356,6 +340,10 @@ public class JiraAssetsRegisterAssetDetailsWebAction extends JiraWebActionSuppor
 
     public List<Field> getFilledFields() {
         return filledFields;
+    }
+
+    public final ConstantHelper getHelper() {
+        return helper;
     }
 
     public String getIdNumber() {
@@ -454,13 +442,13 @@ public class JiraAssetsRegisterAssetDetailsWebAction extends JiraWebActionSuppor
      * Checking the default fields. If not declared creating the fields.
      */
     private void requiredFieldsNotDeclared() {
-        AssetField deviceNameField = arService.findFieldByFieldName(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME);
-        AssetField assigneeField = arService.findFieldByFieldName(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE);
+        AssetField deviceNameField = arService.findFieldByFieldName(ConstantHelper.FIELD_NAME_DEVICE_NAME);
+        AssetField assigneeField = arService.findFieldByFieldName(ConstantHelper.FIELD_NAME_ASSIGNEE);
         if (deviceNameField == null) {
-            arService.addRequiredField(AssetRegistryConstantsUtil.FIELD_NAME_DEVICE_NAME);
+            arService.addRequiredField(ConstantHelper.FIELD_NAME_DEVICE_NAME);
         }
         if (assigneeField == null) {
-            arService.addRequiredField(AssetRegistryConstantsUtil.FIELD_NAME_ASSIGNEE);
+            arService.addRequiredField(ConstantHelper.FIELD_NAME_ASSIGNEE);
         }
     }
 

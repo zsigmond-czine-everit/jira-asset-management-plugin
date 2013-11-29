@@ -13,7 +13,7 @@
 										<tr>
 											<td><label>$field.fieldName</label></td>
 											<td>
-												#if(($field.fieldName.equals($FIELD_NAME_ASSIGNEE) || $field.fieldName.equals($FIELD_NAME_DEVICE_NAME)))
+												#if(($field.fieldName.equals($helper.fieldNameAssignee) || $field.fieldName.equals($helper.fieldNameDeviceName)))
 		    									#else
 												<form name="field-reguired-managent-operation" method="post" action="JiraAssetsRegisterFieldManagementWebAction.jspa" class="clear-form">
 													<a href="javascript:;" onclick="parentNode.submit();" class="ui-icon icon-trash" title="$i18n.getText("icon.trash")"></a>

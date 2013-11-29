@@ -19,13 +19,13 @@
 											<tr></tr>
 											#foreach ($field in $requiredFields)
 												<tr>
-												#if($field.fieldName.equals($FIELD_NAME_ASSIGNEE))
+												#if($field.fieldName.equals($helper.fieldNameAssignee))
 													<td><label>$i18n.getText("device.label.assignee")<label></td>
 													<td>
-														<select name="$FIELD_NAME_ASSIGNEE" id="$FIELD_NAME_ASSIGNEE">
+														<select name="$helper.fieldNameAssignee" id="$helper.fieldNameAssignee">
 															<option value="">$i18n.getText("search.any.assignee")</option>
 														#foreach ($assignee in $assignees)
-												    		<option value="$assignee.name" #foreach($filledField in $filledFields)#if($filledField.fieldName.equals($FIELD_NAME_ASSIGNEE) && $filledField.fieldValue.equals($assignee.name))selected="selected"#end#end>$assignee.displayName</option>
+												    		<option value="$assignee.name" #foreach($filledField in $filledFields)#if($filledField.fieldName.equals($helper.fieldNameAssignee) && $filledField.fieldValue.equals($assignee.name))selected="selected"#end#end>$assignee.displayName</option>
 												    	#end
 														</select>
 													</td
@@ -129,18 +129,18 @@
 										<td>$asset.status</td>
 										<td>
 											<a href="#" id="$asset.issueKey" class="ui-icon icon-information" title="$i18n.getText("icon.info")"></a>
-										#if($asset.status.equals($statusOpenName) && $asset.loggedUserIsAssignee)
-											<a href="/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?actionName=$actionEdtiDetails&issueKey=$asset.issueKey&backPageUrl=$backButtonValue" class="ui-icon icon-edit" title="$i18n.getText("icon.edit")"></a>
-											<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionInternalHandover&backPageUrl=$backButtonValue" class="ui-icon icon-internal-assignee" title="$i18n.getText("icon.internal.assignee")"></a>
-											<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionExternalHandover&backPageUrl=$backButtonValue" class="ui-icon icon-external-assignee" title="$i18n.getText("icon.external.assignee")"></a>
-											<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionDisposeAsset&backPageUrl=$backButtonValue" class="ui-icon icon-culling" title="$i18n.getText("icon.culling")"></a>
-										#elseif($asset.status.equals($statusInternalAssignedName) && $asset.loggedUserIsAssignee)
-												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionAcceptance&backPageUrl=$backButtonValue" class="ui-icon icon-accept" title="$i18n.getText("icon.accept")"></a>
-												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionRejection&backPageUrl=$backButtonValue" class="ui-icon icon-reject" title="$i18n.getText("icon.reject")"></a>
-										#elseif($asset.status.equals($statusExternalAssignedName) && $asset.loggedUserIsAssignee) 
-												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionReagain&backPageUrl=$backButtonValue" class="ui-icon icon-recover" title="$i18n.getText("icon.recover")"></a>
-										#elseif($asset.status.equals($statusInternalAssignedName) && ($asset.loggedUserIsReporter || $asset.loggedUserIsPreviousAssigned))
-												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$actionWithdrawal&backPageUrl=$backButtonValue" class="ui-icon icon-reject" title="$i18n.getText("icon.withdraw")"></a>
+										#if($asset.status.equals($helper.statusOpenName) && $asset.loggedUserIsAssignee)
+											<a href="/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?actionName=$helper.actionEdtiDetails&issueKey=$asset.issueKey&backPageUrl=$backButtonValue" class="ui-icon icon-edit" title="$i18n.getText("icon.edit")"></a>
+											<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$helper.actionInternalHandover&backPageUrl=$backButtonValue" class="ui-icon icon-internal-assignee" title="$i18n.getText("icon.internal.assignee")"></a>
+											<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$helper.actionExternalHandover&backPageUrl=$backButtonValue" class="ui-icon icon-external-assignee" title="$i18n.getText("icon.external.assignee")"></a>
+											<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$helper.actionDisposeAsset&backPageUrl=$backButtonValue" class="ui-icon icon-culling" title="$i18n.getText("icon.culling")"></a>
+										#elseif($asset.status.equals($helper.statusInternalAssignedName) && $asset.loggedUserIsAssignee)
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$helper.actionAcceptance&backPageUrl=$backButtonValue" class="ui-icon icon-accept" title="$i18n.getText("icon.accept")"></a>
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$helper.actionRejection&backPageUrl=$backButtonValue" class="ui-icon icon-reject" title="$i18n.getText("icon.reject")"></a>
+										#elseif($asset.status.equals($helper.statusExternalAssignedName) && $asset.loggedUserIsAssignee) 
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$helper.actionReagain&backPageUrl=$backButtonValue" class="ui-icon icon-recover" title="$i18n.getText("icon.recover")"></a>
+										#elseif($asset.status.equals($helper.statusInternalAssignedName) && ($asset.loggedUserIsReporter || $asset.loggedUserIsPreviousAssigned))
+												<a href="/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?change=true&issueKey=$asset.issueKey&actionName=$helper.actionWithdrawal&backPageUrl=$backButtonValue" class="ui-icon icon-reject" title="$i18n.getText("icon.withdraw")"></a>
 										#end
 										</td>
 									</tr>
@@ -188,7 +188,7 @@
 													#foreach ($field in $requiredFields)
 														'<tr>'+
 														#if($asset.assetDetails.fields.get($field.fieldName))
-															#if($field.fieldName.equals($FIELD_NAME_ASSIGNEE))
+															#if($field.fieldName.equals($helper.fieldNameAssignee))
 																'<td>$i18n.getText("device.label.assignee")</td>'+
 																'<td>$asset.assignee.displayName</td>'+
 															#else

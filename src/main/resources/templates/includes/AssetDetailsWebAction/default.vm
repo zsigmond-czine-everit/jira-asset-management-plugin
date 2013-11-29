@@ -4,7 +4,7 @@
 							<table id="required-field" cellspacing="0" cellpadding="2" class="fixed-table-two-column center-table colors-table">
 								<tbody>
 								#foreach ($field in $requiredFields)
-									#if($field.fieldName.equals($FIELD_NAME_ASSIGNEE))
+									#if($field.fieldName.equals($helper.fieldNameAssignee))
 									<tr>
 										<td width="40%">$i18n.getText("device.label.assignee")</td>
 										<td width="60%"><input name="$field.fieldName" value="$loggedUser.name" type="hidden"/>$loggedUser.displayName</td>

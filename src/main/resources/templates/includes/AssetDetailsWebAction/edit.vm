@@ -14,7 +14,7 @@
 										<tbody>
 										#foreach ($field in $requiredFields)
 											#if($asset.assetDetails.fields.get($field.fieldName))
-												#if($field.fieldName.equals($FIELD_NAME_ASSIGNEE))
+												#if($field.fieldName.equals($helper.fieldNameAssignee))
 											<tr>
 												<td>$i18n.getText("device.label.assignee")</td>
 												<td>$asset.assignee.displayName
