@@ -34,12 +34,16 @@ public class JiraAssetsRegisterAssetDetailsWebAction extends JiraWebActionSuppor
      */
     private static final long serialVersionUID = -8704123803346242094L;
 
+    /**
+     * The {@link ConstantHelper} instance.
+     */
     private ConstantHelper helper = ConstantHelper.INSTANCE;
 
     /**
      * The {@link AssetsRegistryService} instance.
      */
     private AssetsRegistryService arService;
+
     /**
      * The {@link JiraPluginService} instance.
      */

@@ -22,6 +22,9 @@ public class JiraAssetsRegisterFieldManagementWebAction extends JiraWebActionSup
      */
     private static final long serialVersionUID = -3171355480317954327L;
 
+    /**
+     * The {@link ConstantHelper} instance.
+     */
     private ConstantHelper helper = ConstantHelper.INSTANCE;
 
     /**

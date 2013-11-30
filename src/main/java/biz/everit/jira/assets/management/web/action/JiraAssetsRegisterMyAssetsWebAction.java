@@ -19,6 +19,9 @@ import biz.everit.jira.assets.management.service.api.enums.DeliveryInformationFi
 import biz.everit.jira.assets.management.service.api.enums.WorkflowActions;
 import biz.everit.jira.assets.management.service.api.enums.WorkflowStatuses;
 import biz.everit.jira.assets.management.utils.ConstantHelper;
+import biz.everit.jira.assets.management.utils.MessageCode;
+import biz.everit.jira.assets.management.utils.MessageHelper;
+
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
@@ -33,6 +36,9 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
      */
     private static final long serialVersionUID = 2631028649881573072L;
 
+    /**
+     * The {@link ConstantHelper} instance.
+     */
     private ConstantHelper helper = ConstantHelper.INSTANCE;
 
     /**
@@ -56,21 +62,6 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
     private User assignee;
 
     /**
-     * The actual issue key to modification.
-     */
-    private String actualIssueKey;
-
-    /**
-     * Showing changing success message or not.
-     */
-    private boolean changeSuccess;
-
-    /**
-     * Showing changing error message or not.
-     */
-    private boolean changeError;
-
-    /**
      * Showing changing page or not.
      */
     private boolean change;
@@ -81,19 +72,9 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
     private String changeActionName;
 
     /**
-     * The change parameter on the request.
-     */
-    private String[] changes;
-
-    /**
      * The issueKey parameter on the request.
      */
-    private String[] issueKeys;
-
-    /**
-     * The actionName parameter on the request.
-     */
-    private String[] changeActionNames;
+    private String issueKey;
 
     /**
      * The actual asset when showing details on the site.
@@ -116,14 +97,24 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
     private String catchError;
 
     /**
-     * The show not changed message.
-     */
-    private boolean notChanged;
-
-    /**
      * The all asset for the selected user.
      */
     private List<Asset> allAsset = new ArrayList<Asset>();
+
+    /**
+     * TODO
+     */
+    private boolean successMessage;
+
+    /**
+     * TODO
+     */
+    private boolean errorMessage;
+
+    /**
+     * TODO
+     */
+    private String messageCode;
 
     /**
      * Simple constructor.
@@ -145,13 +136,11 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
      * @return the user if have one otherwise <code>null</code>.
      */
     public User actualAssignedUser() {
-        if (actualIssueKey != null) {
-            try {
-                return arPlugin.findUserByName(arPlugin.findIssueByIssueKey(actualIssueKey).get(actualIssueKey)
-                        .getString("assignee"));
-            } catch (GenericEntityException e) {
-                catchError = e.toString();
-            }
+        try {
+            return arPlugin.findUserByName(arPlugin.findIssueByIssueKey(issueKey).get(issueKey)
+                    .getString("assignee"));
+        } catch (GenericEntityException e) {
+            catchError = e.toString();
         }
         return null;
     }
@@ -202,14 +191,7 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
             return getRedirect(NONE);
         }
 
-        setDefaultVariable();
-        if (isValue(changes) && changes[0].equals("true")) {
-            if (isValue(issueKeys) && (arPlugin.isValidIssueKey(issueKeys[0]) && isValue(changeActionNames))) {
-                change = true;
-                changeActionName = changeActionNames[0];
-                actualIssueKey = issueKeys[0];
-            }
-        }
+        setVariable();
         return super.doDefault();
     }
 
@@ -220,17 +202,14 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
             setReturnUrl("/secure/Dashboard.jspa");
             return getRedirect(NONE);
         }
-        setDefaultVariable();
-        if (isValue(changes) && changes[0].equals("true")) {
-            if (isValue(issueKeys) && (arPlugin.isValidIssueKey(issueKeys[0]))) {
-                actualIssueKey = issueKeys[0];
+        setVariable();
+        if (change) {
+            if ((arPlugin.isValidIssueKey(issueKey))) {
                 String[] issueAssignees = request.getParameterValues("assignee");
                 String[] comments = request.getParameterValues("comments");
                 ButtonActionNames validButtonActionName = null;
-                if (isValue(changeActionNames)) {
-                    validButtonActionName = validButtonActionName(changeActionNames[0]);
-                }
-                if (isValue(changeActionNames) && (validButtonActionName != null)
+                validButtonActionName = validButtonActionName(changeActionName);
+                if ((validButtonActionName != null)
                         && arPlugin.isValidAction(validButtonActionName.getWorkflowActionName())
                         && isValue(issueAssignees)
                         && arPlugin.isValidAssignee(issueAssignees[0]) && isValue(comments)) {
@@ -243,30 +222,36 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
                         }
                     }
                     if ((loggedUser != null)
-                            && arPlugin.changeIssueStatus(issueKeys[0], issueAssignees[0],
+                            && arPlugin.changeIssueStatus(issueKey, issueAssignees[0],
                                     validButtonActionName.getWorkflowActionName(),
                                     loggedUser.getName(), comments[0], fields)) {
-                        changeSuccess = true;
                         String actualWorkflowActionName = validButtonActionName.getWorkflowActionName();
                         if (actualWorkflowActionName.equals(WorkflowActions.INTERNAL_ASSIGNEE.getActionName())
                                 || actualWorkflowActionName.equals(WorkflowActions.REJECT.getActionName())) {
-                            setReturnUrl("/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?changeSuccess=true");
+                            setReturnUrl("/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?messageCode="
+                                    + MessageCode.MY_ASSET_SUCCESS_CHANGE);
                         } else {
-                            setReturnUrl("/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?changeSuccess=true&actionName="
+                            setReturnUrl("/secure/JiraAssetsRegisterAssetDetailsWebAction!default.jspa?actionName="
                                     + ConstantHelper.getActionEdtiDetails().replace(' ', '+')
-                                    + "&issueKey=" + issueKeys[0]);
+                                    + "&issueKey="
+                                    + issueKey
+                                    + "&messageCode="
+                                    + MessageCode.MY_ASSET_SUCCESS_CHANGE);
                         }
                         return getRedirect(NONE);
                     } else {
-                        notChanged = true;
-                        setReturnUrl("/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?notChanged=true&change=true&issueKey="
-                                + issueKeys[0] + "&actionName=" + changeActionName.replace(' ', '+'));
+                        setReturnUrl("/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?issueKey="
+                                + issueKey
+                                + "&actionName="
+                                + changeActionName.replace(' ', '+')
+                                + "&messageCode="
+                                + MessageCode.MY_ASSET_ERROR_NOT_CHANGE);
                         return getRedirect(NONE);
                     }
                 } else {
-                    changeError = true;
-                    setReturnUrl("/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?changeError=true&change=true&issueKey="
-                            + issueKeys[0] + "&actionName=" + changeActionName.replace(' ', '+'));
+                    setReturnUrl("/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa?issueKey="
+                            + issueKey + "&actionName=" + changeActionName.replace(' ', '+') + "&messageCode="
+                            + MessageCode.MY_ASSET_ERROR_CHANGE);
                     return getRedirect(NONE);
                 }
             }
@@ -275,10 +260,6 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
             return getRedirect(NONE);
         }
         return super.execute();
-    }
-
-    public String getActualIssueKey() {
-        return actualIssueKey;
     }
 
     public List<Asset> getAllAsset() {
@@ -317,6 +298,14 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
         return helper;
     }
 
+    public final String getIssueKey() {
+        return issueKey;
+    }
+
+    public String getPropertiesKey() {
+        return MessageHelper.getProperitesKey(messageCode);
+    }
+
     public String getSelectedUserName() {
         return selectedUserName;
     }
@@ -339,16 +328,12 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
         return change;
     }
 
-    public boolean isChangeError() {
-        return changeError;
+    public final boolean isErrorMessage() {
+        return errorMessage;
     }
 
-    public boolean isChangeSuccess() {
-        return changeSuccess;
-    }
-
-    public boolean isNotChanged() {
-        return notChanged;
+    public final boolean isSuccessMessage() {
+        return successMessage;
     }
 
     /**
@@ -416,10 +401,7 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
      * @return the find exist user, if no one return <code>null</code>.
      */
     public User previousAssignedUser() {
-        if (actualIssueKey != null) {
-            return arPlugin.previousAssignedUser(actualIssueKey);
-        }
-        return null;
+        return arPlugin.previousAssignedUser(issueKey);
     }
 
     /**
@@ -480,49 +462,83 @@ public class JiraAssetsRegisterMyAssetsWebAction extends JiraWebActionSupport {
         this.catchError = catchError;
     }
 
-    /**
-     * Set all default variable. The changes. issueKeys, changeActionNames, changeActionName, changeSuccess and
-     * changeError variable.
-     */
-    private void setDefaultVariable() {
-        changes = request.getParameterValues("change");
-        issueKeys = request.getParameterValues("issueKey");
-        changeActionNames = request.getParameterValues("actionName");
-        String[] selectAssignees = request.getParameterValues("selectAssignee");
-        User loggedUser = arPlugin.getLoggedUser();
-        if (loggedUser != null) {
-            if (isValue(selectAssignees) && arPlugin.isValidAssignee(selectAssignees[0])) {
-                selectedUserName = selectAssignees[0];
-            } else {
-                selectedUserName = loggedUser.getName();
-            }
-            if (isValue(changeActionNames)) {
-                changeActionName = changeActionNames[0];
-            }
-
-            String[] changeSuccesses = request.getParameterValues("changeSuccess");
-            String[] changeErrors = request.getParameterValues("changeError");
-            String[] notChangeds = request.getParameterValues("notChanged");
-            if (isValue(changeSuccesses) && changeSuccesses[0].equals("true")) {
-                changeSuccess = true;
-            }
-            if (isValue(changeErrors) && changeErrors[0].equals("true")) {
-                changeError = true;
-            }
-            if (isValue(notChangeds) && notChangeds[0].equals("true")) {
-                notChanged = true;
-            }
-
-            String[] backPageUrls = request.getParameterValues("backPageUrl");
-            if (isValue(backPageUrls)) {
-                backButtonValue = backPageUrls[0].replace(' ', '+');
-            } else {
-                backButtonValue = "/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa";
-            }
-            allAsset.addAll(myAssets());
-            allAsset.addAll(deliveredAssets());
-            allAsset.addAll(receivedAssets());
+    private void setChangeParam() {
+        if (changeActionName.equals(ButtonActionNames.EXTERNAL_HANDOVER.getActionName()) ||
+                changeActionName.equals(ButtonActionNames.INTERNAL_HANDOVER.getActionName()) ||
+                changeActionName.equals(ButtonActionNames.DISPOSE_ASSET.getActionName()) ||
+                changeActionName.equals(ButtonActionNames.ACCEPTANCE.getActionName()) ||
+                changeActionName.equals(ButtonActionNames.REJECTION.getActionName()) ||
+                changeActionName.equals(ButtonActionNames.WITHDRAWAL.getActionName()) ||
+                changeActionName.equals(ButtonActionNames.REAGAIN.getActionName())) {
+            change = true;
+        } else {
+            change = false;
         }
+    }
+
+    /**
+     * Set all variable. The changes. issueKeys, changeActionNames, changeActionName, changeSuccess and changeError
+     * variable.
+     */
+    private void setVariable() {
+        // getting messaCode parameter and set.
+        String[] messageCodeParameter = request.getParameterValues("messageCode");
+        if (isValue(messageCodeParameter)) {
+            messageCode = messageCodeParameter[0];
+        } else {
+            messageCode = MessageCode.EMPTY_MESSAGE;
+        }
+
+        // setting the messageCode is error or success or either not.
+        String[] split = messageCode.split("x");
+        if (split[0].equals("01")) {
+            successMessage = true;
+            errorMessage = false;
+        } else if (split[0].equals("02")) {
+            successMessage = false;
+            errorMessage = true;
+        } else {
+            successMessage = false;
+            errorMessage = false;
+        }
+
+        // getting and set issueKey
+        String[] issueKeyParameter = request.getParameterValues("issueKey");
+        if (isValue(issueKeyParameter) && arPlugin.isValidIssueKey(issueKeyParameter[0])) {
+            issueKey = issueKeyParameter[0];
+        } else {
+            issueKey = "NO_ISSUE_KEY";
+        }
+
+        // getting and set changeActionName
+        String[] changeActionNameParamter = request.getParameterValues("actionName");
+        if (isValue(changeActionNameParamter)) {
+            changeActionName = changeActionNameParamter[0];
+        } else {
+            changeActionName = "NO_CHANGE_ACTION_NAME";
+        }
+
+        setChangeParam();
+
+        // get and set the backPageUrl parameter.
+        String[] backPageUrls = request.getParameterValues("backPageUrl");
+        if (isValue(backPageUrls)) {
+            backButtonValue = backPageUrls[0].replace(' ', '+');
+        } else {
+            backButtonValue = "/secure/JiraAssetsRegisterMyAssetsWebAction!default.jspa";
+        }
+
+        // get the selectAssignee and set the variable.
+        String[] selectAssignees = request.getParameterValues("selectAssignee");
+        if (isValue(selectAssignees) && arPlugin.isValidAssignee(selectAssignees[0])) {
+            selectedUserName = selectAssignees[0];
+        } else {
+            selectedUserName = arPlugin.getLoggedUser().getName();
+        }
+
+        allAsset.addAll(myAssets());
+        allAsset.addAll(deliveredAssets());
+        allAsset.addAll(receivedAssets());
     }
 
     /**

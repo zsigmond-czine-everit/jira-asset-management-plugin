@@ -31,6 +31,9 @@ public class JiraAssetsRegisterSearchWebAction extends JiraWebActionSupport {
      */
     private static final long serialVersionUID = -5660598169299821943L;
 
+    /**
+     * The {@link ConstantHelper} instance.
+     */
     private ConstantHelper helper = ConstantHelper.INSTANCE;
 
     /**

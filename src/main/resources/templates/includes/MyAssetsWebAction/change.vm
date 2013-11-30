@@ -25,7 +25,7 @@
 										<td><textarea id="comments" name="comments" class="assets-registry-text-area"></textarea></td>
 									</tr>
 									<input type="hidden" name="change" value="true" />
-									<input type="hidden" name="issueKey" value="$actualIssueKey"/>
+									<input type="hidden" name="issueKey" value="$issueKey"/>
 									<input type="hidden" name="actionName" value="$changeActionName"/>
 								</tbody>
 							</table>
